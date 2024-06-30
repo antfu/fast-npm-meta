@@ -1,0 +1,25 @@
+{
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "prepare": "nitropack prepare",
+    "dev": "nitropack dev",
+    "build": "nitropack build",
+    "preview": "node .output/server/index.mjs"
+  },
+  "devDependencies": {
+    "@pnpm/fetch": "^8.0.2",
+    "@pnpm/npm-resolver": "^20.0.1",
+    "@types/npm-package-arg": "^6.1.4",
+    "@types/npm-registry-fetch": "^8.0.7",
+    "@types/semver": "^7.5.8",
+    "async-cache-dedupe": "^2.2.0",
+    "lru-cache": "^10.3.0",
+    "nitropack": "^2.9.7",
+    "npm-package-arg": "^11.0.2",
+    "npm-registry-fetch": "^17.1.0",
+    "ofetch": "^1.3.4",
+    "semver": "^7.6.2",
+    "ufo": "^1.5.3"
+  }
+}
