@@ -2,7 +2,6 @@
   "name": "fast-npm-meta",
   "type": "module",
   "version": "0.0.0",
-  "packageManager": "pnpm@9.4.0",
   "description": "Get npm package metadata",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
