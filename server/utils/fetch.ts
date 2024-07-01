@@ -1,20 +1,10 @@
 import { joinURL } from 'ufo'
 import { $fetch } from 'ofetch'
-import type { Packument } from './types'
 
 const ABBREVIATED_DOC = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
 const REGISTRY = 'https://registry.npmjs.org/'
 
 const promiseCache = new Map<string, ReturnType<typeof _fetchPackageManifest>>()
-
-export interface PackageManifest {
-  name: string
-  distTags: Record<string, string> & {
-    latest: string
-  }
-  versions: string[]
-  lastSynced: number
-}
 
 async function _fetchPackageManifest(name: string): Promise<PackageManifest> {
   const url = joinURL(REGISTRY, name)
@@ -69,4 +59,26 @@ export async function fetchPackageManifest(name: string, force = false) {
 
   promiseCache.set(name, promise)
   return promise
+}
+
+export interface Packument {
+  'name': string
+  /**
+   * An object where each key is a version, and each value is the manifest for
+   * that version.
+   */
+  'versions': Record<string, Omit<Packument, 'versions'>>
+  /**
+   * An object mapping dist-tags to version numbers. This is how `foo@latest`
+   * gets turned into `foo@1.2.3`.
+   */
+  'dist-tags': { latest: string } & Record<string, string>
+  /**
+   * In the full packument, an object mapping version numbers to publication
+   * times, for the `opts.before` functionality.
+   */
+  'time': Record<string, string> & {
+    created: string
+    modified: string
+  }
 }

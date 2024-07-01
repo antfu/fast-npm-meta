@@ -1,6 +1,9 @@
-export default cachedEventHandler(async () => {
-  return 'hi'
-}, {
-  // 10 mins
-  maxAge: 60 * 10,
+import { version } from '../../package.json'
+
+export default eventHandler(() => {
+  return {
+    name: 'fast-npm-version',
+    version,
+    docs: 'https://github.com/antfu/fast-npm-meta',
+  }
 })

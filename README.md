@@ -1,4 +1,4 @@
-# npm-meta
+# fast-npm-meta
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -77,7 +77,7 @@ Returns
 
 #### Resolve Multiple Packages
 
-Use `+` to separate the package names.
+Use `+` to separate the package specs.
 
 ```sh
 curl https://npm.antfu.dev/vite@alpha+vue+nuxt@~3.11
@@ -108,6 +108,54 @@ Returns an array of objects:
 ]
 ```
 
+### `GET /versions/:pkg`
+
+#### Get All Versions and Tags of a Package
+
+```sh
+curl https://npm.antfu.dev/versions/vite
+```
+
+```jsonc
+{
+  "name": "vite",
+  "distTags": {
+    "previous": "5.2.5",
+    "alpha": "6.0.0-alpha.18",
+    "beta": "5.3.0-beta.2",
+    "latest": "5.3.2"
+  },
+  "versions": [
+    "0.1.0",
+    "0.1.1",
+    "0.1.2",
+    "0.2.0",
+    "0.3.0",
+    "0.3.1",
+    "0.3.2",
+    "0.4.0"
+    // ...
+  ],
+  "lastSynced": 1719801079260
+}
+```
+
+## JavaScript API
+
+You can also use the JavaScript API to resolve the versions.
+
+```bash
+npm install fast-npm-meta
+```
+
+```ts
+import { getLatestVersion } from 'fast-npm-meta'
+
+const metadata = await getLatestVersion('vite')
+
+console.log({ version }) // 5.3.2
+```
+
 ## Sponsors
 
 <p align="center">
@@ -122,13 +170,13 @@ Returns an array of objects:
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/npm-meta-info?style=flat&colorA=080f12&colorB=1fa669
-[npm-version-href]: https://npmjs.com/package/npm-meta-info
-[npm-downloads-src]: https://img.shields.io/npm/dm/npm-meta-info?style=flat&colorA=080f12&colorB=1fa669
-[npm-downloads-href]: https://npmjs.com/package/npm-meta-info
-[bundle-src]: https://img.shields.io/bundlephobia/minzip/npm-meta-info?style=flat&colorA=080f12&colorB=1fa669&label=minzip
-[bundle-href]: https://bundlephobia.com/result?p=npm-meta-info
-[license-src]: https://img.shields.io/github/license/antfu/npm-meta-info.svg?style=flat&colorA=080f12&colorB=1fa669
-[license-href]: https://github.com/antfu/npm-meta-info/blob/main/LICENSE
+[npm-version-src]: https://img.shields.io/npm/v/fast-npm-meta?style=flat&colorA=080f12&colorB=1fa669
+[npm-version-href]: https://npmjs.com/package/fast-npm-meta
+[npm-downloads-src]: https://img.shields.io/npm/dm/fast-npm-meta?style=flat&colorA=080f12&colorB=1fa669
+[npm-downloads-href]: https://npmjs.com/package/fast-npm-meta
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/fast-npm-meta?style=flat&colorA=080f12&colorB=1fa669&label=minzip
+[bundle-href]: https://bundlephobia.com/result?p=fast-npm-meta
+[license-src]: https://img.shields.io/github/license/antfu/fast-npm-meta.svg?style=flat&colorA=080f12&colorB=1fa669
+[license-href]: https://github.com/antfu/fast-npm-meta/blob/main/LICENSE
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
-[jsdocs-href]: https://www.jsdocs.io/package/npm-meta-info
+[jsdocs-href]: https://www.jsdocs.io/package/fast-npm-meta
