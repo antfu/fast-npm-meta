@@ -43,7 +43,7 @@ export default eventHandler(async (event) => {
       name: parsed.name,
       specifier,
       version,
-      lastUpdated: data.lastUpdated,
+      lastSynced: data.lastSynced,
     }
   }
 
