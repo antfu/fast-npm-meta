@@ -3,13 +3,14 @@ import semver from 'semver'
 import { fetchPackageManifest } from '../utils/fetch'
 
 export default eventHandler(async (event) => {
+  const query = getQuery(event)
   async function getLatest(spec: string) {
     const parsed = parsePackage(spec)
 
     if (!parsed.name)
       throw new Error(`Invalid package name: ${spec}`)
 
-    const data = await fetchPackageManifest(parsed.name)
+    const data = await fetchPackageManifest(parsed.name, !!query.force)
 
     let version: string | null = null
     let specifier = 'latest'

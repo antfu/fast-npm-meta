@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest'
-import { getLatestVersion, getLatestVersions } from '../src'
+import { getLatestVersion, getLatestVersionBatch, getVersions } from '../src'
 
-it('works', async () => {
+it.concurrent('latest', async () => {
   expect(await getLatestVersion('vite@2'))
     .toMatchObject({
       name: 'vite',
@@ -10,7 +10,7 @@ it('works', async () => {
       lastSynced: expect.any(Number),
     })
 
-  expect(await getLatestVersions(['vite', 'nuxt@~3.6']))
+  expect(await getLatestVersionBatch(['vite', 'nuxt@~3.6']))
     .toMatchObject([
       {
         name: 'vite',
@@ -25,4 +25,13 @@ it('works', async () => {
         lastSynced: expect.any(Number),
       },
     ])
+})
+
+it.concurrent('versions', async () => {
+  expect(await getVersions('vite'))
+    .toMatchObject({
+      name: 'vite',
+      versions: expect.arrayContaining(['3.0.0']),
+      lastSynced: expect.any(Number),
+    })
 })
