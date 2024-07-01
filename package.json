@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r run build",
+    "build:server": "pnpm -C server run build",
     "dev": "pnpm -C server run dev",
     "lint": "eslint .",
     "prepublishOnly": "nr build",
