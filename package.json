@@ -9,7 +9,7 @@
     "dev": "pnpm -C server run dev",
     "lint": "eslint .",
     "prepublishOnly": "nr build",
-    "release": "bumpp && pnpm publish -r",
+    "release": "bumpp -r && pnpm publish -r",
     "start": "esno src/index.ts",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
