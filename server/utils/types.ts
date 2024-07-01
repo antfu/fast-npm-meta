@@ -7,6 +7,11 @@ export interface PackageManifest {
   lastSynced: number
 }
 
+export interface PackageManifestError {
+  error: string
+  lastSynced: number
+}
+
 export interface ResolvedPackageVersion {
   name: string
   version: string | null

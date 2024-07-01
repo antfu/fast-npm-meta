@@ -4,9 +4,9 @@ import { fetchPackageManifest } from '../utils/fetch'
 
 export default eventHandler(async (event) => {
   const query = getQuery(event)
+
   async function getLatest(spec: string) {
     const parsed = parsePackage(spec)
-
     if (!parsed.name)
       throw new Error(`Invalid package name: ${spec}`)
 
