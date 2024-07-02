@@ -1,5 +1,5 @@
 import { $fetch } from 'ofetch'
-import type { PackageManifest, ResolvedPackageVersion } from '../../server/utils/types'
+import type { PackageManifest, ResolvedPackageVersion } from '../../shared/types'
 
 export {
   PackageManifest,

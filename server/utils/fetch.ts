@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { joinURL } from 'ufo'
 import { $fetch } from 'ofetch'
-import type { PackageManifestError } from './types'
+import type { PackageManifest, PackageManifestError } from '../../shared/types'
 
 const ABBREVIATED_DOC = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
 const REGISTRY = 'https://registry.npmjs.org/'
