@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { getLatestVersion, getLatestVersionBatch, getVersions } from '../src'
+import { getLatestVersion, getLatestVersionBatch, getVersions } from '../src/api'
 
 it.concurrent('latest', async () => {
   expect(await getLatestVersion('vite@2'))

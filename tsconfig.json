@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "composite": true,
     "target": "ESNext",
     "lib": ["ESNext"],
+    "rootDir": ".",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
@@ -12,6 +12,9 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
   },
+  "include": [
+    "**/*.ts"
+  ],
   "exclude": [
     "server"
   ]
