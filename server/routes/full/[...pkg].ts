@@ -1,5 +1,5 @@
 import { fetchPackageManifest } from '../../utils/fetch'
-import type { PackageManifest, PackageVersionsInfo } from '../../../shared/types'
+import type { PackageManifest } from '../../../shared/types'
 import { handlePackagesQuery } from '../../utils/handle'
 
 export default eventHandler(async (event) => {

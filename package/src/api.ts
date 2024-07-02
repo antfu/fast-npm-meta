@@ -1,4 +1,4 @@
-import type { PackageManifest, PackageVersionsInfo, ResolvedPackageVersion } from '../../shared/types'
+import type { PackageVersionsInfo, ResolvedPackageVersion } from '../../shared/types'
 
 export interface FetchOptions {
   apiEndpoint?: string
