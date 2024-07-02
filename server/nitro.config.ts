@@ -3,7 +3,8 @@ export default defineNitroConfig({
   preset: 'netlify_edge',
   storage: {
     manifest: {
-      driver: 'lruCache',
+      driver: 'lruCache', // Switch to `redis`?
+      max: 10_000,
     },
   },
 })
