@@ -1,9 +1,12 @@
-import { $fetch } from 'ofetch'
 import type { PackageManifest, ResolvedPackageVersion } from '../../shared/types'
 
 export interface ApiOptions {
   force?: boolean
   apiEndpoint?: string
+  /**
+   * Fetch function
+   */
+  fetch?: typeof fetch
 }
 
 export const defaultOptions = {
@@ -13,6 +16,7 @@ export const defaultOptions = {
    * @default 'https://npm.antfu.dev/'
    */
   apiEndpoint: 'https://npm.antfu.dev/',
+
 } satisfies ApiOptions
 
 export async function getLatestVersionBatch(
@@ -21,17 +25,13 @@ export async function getLatestVersionBatch(
 ): Promise<ResolvedPackageVersion[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
+    fetch: fetchApi = fetch,
   } = options
 
-  const data = await $fetch<ResolvedPackageVersion | ResolvedPackageVersion[]>(
-    packages.join('+'),
-    {
-      baseURL: apiEndpoint,
-      query: {
-        force: options.force ? true : undefined,
-      },
-    },
-  )
+  const query = options.force ? '?force=true' : ''
+  const data = await fetchApi(new URL(packages.join('+') + query, apiEndpoint))
+    .then(r => r.json()) as ResolvedPackageVersion | ResolvedPackageVersion[]
+
   if (!Array.isArray(data))
     return [data]
   return data
@@ -51,17 +51,13 @@ export async function getVersionsBatch(
 ): Promise<PackageManifest[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
+    fetch: fetchApi = fetch,
   } = options
 
-  const data = await $fetch<PackageManifest | PackageManifest[]>(
-    `/versions/${packages.join('+')}`,
-    {
-      baseURL: apiEndpoint,
-      query: {
-        force: options.force ? true : undefined,
-      },
-    },
-  )
+  const query = options.force ? '?force=true' : ''
+  const data = await fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
+    .then(r => r.json()) as PackageManifest | PackageManifest[]
+
   if (!Array.isArray(data))
     return [data]
   return data
