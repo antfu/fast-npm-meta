@@ -14,6 +14,7 @@ try {
     commit: true,
     push: true,
     tag: true,
+    recursive: true,
   })
 
   if (!result.newVersion.includes('beta')) {
