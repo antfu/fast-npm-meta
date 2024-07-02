@@ -143,6 +143,31 @@ curl https://npm.antfu.dev/versions/vite
 }
 ```
 
+#### 📦 Get Versions satisfies the Version Range
+
+```sh
+curl https://npm.antfu.dev/versions/vite@5
+```
+
+```jsonc
+{
+  "name": "vite",
+  "distTags": {
+    "previous": "5.2.5",
+    "alpha": "6.0.0-alpha.18",
+    "beta": "5.3.0-beta.2",
+    "latest": "5.3.2"
+  },
+  "versions": [
+    "5.0.0",
+    "5.0.1",
+    "5.0.2"
+    // ...
+  ],
+  "lastSynced": 1719801079260
+}
+```
+
 #### 📦 Get All Versions and Tags of Multiple Packages
 
 Use `+` to separate the package names.

@@ -1,12 +1,29 @@
-import type { PackageManifest, ResolvedPackageVersion } from '../../shared/types'
+import type { PackageManifest, PackageVersionsInfo, ResolvedPackageVersion } from '../../shared/types'
 
-export interface ApiOptions {
-  force?: boolean
+export interface FetchOptions {
   apiEndpoint?: string
   /**
    * Fetch function
    */
   fetch?: typeof fetch
+}
+
+export interface GetVersionsOptions extends FetchOptions {
+  /**
+   * By pass cache and get the latest data
+   */
+  force?: boolean
+  /**
+   * Include all versions that are newer than the specified version
+   */
+  loose?: boolean
+}
+
+export interface GetLatestVersionOptions extends FetchOptions {
+  /**
+   * By pass cache and get the latest data
+   */
+  force?: boolean
 }
 
 export const defaultOptions = {
@@ -17,11 +34,11 @@ export const defaultOptions = {
    */
   apiEndpoint: 'https://npm.antfu.dev/',
 
-} satisfies ApiOptions
+} satisfies FetchOptions
 
 export async function getLatestVersionBatch(
   packages: string[],
-  options: ApiOptions = {},
+  options: GetLatestVersionOptions = {},
 ): Promise<ResolvedPackageVersion[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
@@ -39,7 +56,7 @@ export async function getLatestVersionBatch(
 
 export async function getLatestVersion(
   name: string,
-  options: ApiOptions = {},
+  options: GetLatestVersionOptions = {},
 ): Promise<ResolvedPackageVersion> {
   const [data] = await getLatestVersionBatch([name], options)
   return data
@@ -47,16 +64,22 @@ export async function getLatestVersion(
 
 export async function getVersionsBatch(
   packages: string[],
-  options: ApiOptions = {},
-): Promise<PackageManifest[]> {
+  options: GetVersionsOptions = {},
+): Promise<PackageVersionsInfo[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
   } = options
 
-  const query = options.force ? '?force=true' : ''
+  let query = [
+    options.force ? 'force=true' : '',
+    options.loose ? 'loose=true' : '',
+  ].filter(Boolean).join('&')
+  if (query)
+    query = `?${query}`
+
   const data = await fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
-    .then(r => r.json()) as PackageManifest | PackageManifest[]
+    .then(r => r.json()) as PackageVersionsInfo | PackageVersionsInfo[]
 
   if (!Array.isArray(data))
     return [data]
@@ -65,8 +88,8 @@ export async function getVersionsBatch(
 
 export async function getVersions(
   name: string,
-  options: ApiOptions = {},
-): Promise<PackageManifest> {
+  options: GetVersionsOptions = {},
+): Promise<PackageVersionsInfo> {
   const [data] = await getVersionsBatch([name], options)
   return data
 }

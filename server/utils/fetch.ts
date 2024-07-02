@@ -3,10 +3,13 @@ import { joinURL } from 'ufo'
 import { $fetch } from 'ofetch'
 import type { PackageManifest, PackageManifestError } from '../../shared/types'
 
-const ABBREVIATED_DOC = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
+const DOC_ABBREVIATED = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
+const DOC_FULL = 'application/json'
 const REGISTRY = 'https://registry.npmjs.org/'
 
 const promiseCache = new Map<string, ReturnType<typeof _fetchPackageManifest>>()
+
+const FullManifest = true
 
 async function _fetchPackageManifest(name: string): Promise<PackageManifest> {
   console.log('Fetching package:', name)
@@ -16,7 +19,7 @@ async function _fetchPackageManifest(name: string): Promise<PackageManifest> {
   const packument = await $fetch(url, {
     headers: {
       'user-agent': `get-npm-meta`,
-      'accept': ABBREVIATED_DOC,
+      'accept': FullManifest ? DOC_FULL : DOC_ABBREVIATED,
     },
   }) as unknown as Packument
 
@@ -24,6 +27,7 @@ async function _fetchPackageManifest(name: string): Promise<PackageManifest> {
     name: packument.name,
     distTags: packument['dist-tags'],
     versions: Object.keys(packument.versions),
+    time: packument.time,
     lastSynced: Date.now(),
   }
 }

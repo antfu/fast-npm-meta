@@ -63,6 +63,10 @@ importers:
   package: {}
 
   server:
+    dependencies:
+      h3:
+        specifier: ^1.12.0
+        version: 1.12.0
     devDependencies:
       '@pnpm/fetch':
         specifier: ^8.0.2

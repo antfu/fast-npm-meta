@@ -1,23 +1,55 @@
-import parsePackage from 'npm-package-arg'
+import semver from 'semver'
 import { fetchPackageManifest } from '../../utils/fetch'
+import type { PackageVersionsInfo } from '../../../shared/types'
+import { handlePackagesQuery } from '../../utils/handle'
 
 export default eventHandler(async (event) => {
   const query = getQuery(event)
 
-  function getVersions(spec: string) {
-    const parsed = parsePackage(spec)
+  return handlePackagesQuery<PackageVersionsInfo>(
+    event,
+    async (spec) => {
+      const manifest = await fetchPackageManifest(spec.name, !!query.force)
+      let versions = manifest.versions
 
-    if (!parsed.name)
-      throw new Error(`Invalid package name: ${spec}`)
+      if (spec.type === 'range' && spec.fetchSpec !== '*') {
+        const satisfiedVersions = versions.filter((ver) => {
+          return semver.satisfies(ver, spec.fetchSpec)
+        })
+        if (query.loose) {
+          versions = versions.filter((i) => {
+            if (satisfiedVersions.includes(i))
+              return true
+            return satisfiedVersions.some(s => semver.lt(s, i))
+          })
+        }
+        else {
+          versions = satisfiedVersions
+        }
+      }
+      else if (spec.type === 'tag') {
+        const tag = manifest.distTags[spec.fetchSpec]
+        if (tag) {
+          versions = [tag]
+        }
+      }
 
-    return fetchPackageManifest(parsed.name, !!query.force)
-  }
+      const time: PackageVersionsInfo['time'] = {
+        created: manifest.time.created,
+        modified: manifest.time.modified,
+      }
+      for (const ver of versions) {
+        time[ver] = manifest.time[ver]
+      }
 
-  const pkgs = event.context.params.pkg
-  if (pkgs.includes('+')) {
-    return Promise.all(pkgs.split('+').map(getVersions))
-  }
-  else {
-    return getVersions(pkgs)
-  }
+      return {
+        name: spec.name,
+        distTags: manifest.distTags,
+        versions,
+        time,
+        specifier: spec.fetchSpec,
+        lastSynced: manifest.lastSynced,
+      }
+    },
+  )
 })

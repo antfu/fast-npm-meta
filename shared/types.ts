@@ -4,7 +4,15 @@ export interface PackageManifest {
     latest: string
   }
   versions: string[]
+  time: Record<string, string> & {
+    created: string
+    modified: string
+  }
   lastSynced: number
+}
+
+export interface PackageVersionsInfo extends PackageManifest {
+  specifier: string
 }
 
 export interface PackageManifestError {
@@ -16,5 +24,6 @@ export interface ResolvedPackageVersion {
   name: string
   version: string | null
   specifier: string
-  lastSynced: string
+  publishedAt: string | null
+  lastSynced: number
 }
