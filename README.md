@@ -18,6 +18,9 @@ Also, if you try to fetch that metadata from the official [`pacote`](https://git
 
 This project aims to provide a lightweight API server as the proxy, which caches the metadata from the NPM registry and provides a more efficient way to resolve the versions of the packages.
 
+> [!IMPORTANT]
+> This project is still in the early stage of development. Pin your dependencies on usage, and feedback are greatly welcomed.
+
 ## API
 
 An example server is deployed at https://npm.antfu.dev/. You can also deploy your own instance.
