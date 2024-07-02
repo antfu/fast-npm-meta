@@ -5,7 +5,7 @@ import glob from 'fast-glob'
 import { $ } from 'zx'
 
 try {
-  const packages = await glob(['package.json', './packages/*/package.json'])
+  const packages = await glob(['package.json', 'server/package.json', 'package/package.json'])
 
   console.log('Bumping versions in packages:', packages.join(', '), '\n')
 
