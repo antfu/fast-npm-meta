@@ -21,13 +21,13 @@ This project aims to provide a lightweight API server as the proxy, which caches
 > [!IMPORTANT]
 > This project is still in the early stage of development. Pin your dependencies on usage, and feedback are greatly welcomed.
 
-## API
+## API Endpoints
 
 An example server is deployed at https://npm.antfu.dev/. You can also deploy your own instance.
 
 ### `GET /:pkg`
 
-#### Get the Latest Version
+#### 📦 Get the Latest Version
 
 ```sh
 curl https://npm.antfu.dev/vite
@@ -44,7 +44,7 @@ Returns
 }
 ```
 
-#### Get the Latest Version of a Tag
+#### 📦 Get the Latest Version of a Tag
 
 ```sh
 curl https://npm.antfu.dev/vite@alpha
@@ -61,7 +61,7 @@ Returns
 }
 ```
 
-#### Get the Latest Version of a Range
+#### 📦 Get the Latest Version of a Range
 
 ```sh
 curl https://npm.antfu.dev/vite@^2.1.0
@@ -78,7 +78,7 @@ Returns
 }
 ```
 
-#### Resolve Multiple Packages
+#### 📦 Resolve Multiple Packages
 
 Use `+` to separate the package specs.
 
@@ -113,7 +113,7 @@ Returns an array of objects:
 
 ### `GET /versions/:pkg`
 
-#### Get All Versions and Tags of a Package
+#### 📦 Get All Versions and Tags of a Package
 
 ```sh
 curl https://npm.antfu.dev/versions/vite
@@ -141,6 +141,14 @@ curl https://npm.antfu.dev/versions/vite
   ],
   "lastSynced": 1719801079260
 }
+```
+
+#### 📦 Get All Versions and Tags of Multiple Packages
+
+Use `+` to separate the package names.
+
+```sh
+curl https://npm.antfu.dev/versions/vite+vue+nuxt
 ```
 
 ## JavaScript API
