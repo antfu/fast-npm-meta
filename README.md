@@ -189,7 +189,7 @@ import { getLatestVersion } from 'fast-npm-meta'
 
 const metadata = await getLatestVersion('vite')
 
-console.log({ version }) // 5.3.2
+console.log(metadata.version) // 5.3.2
 ```
 
 ## Sponsors
