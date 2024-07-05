@@ -17,6 +17,10 @@ export default defineNitroConfig({
       repoUrl,
       revision,
       deployTime: new Date().toISOString(),
+      cacheTimeout: '',
+      cacheTimeoutForce: '',
+      registryUrl: '',
+      registryUserAgent: '',
     },
   },
 })

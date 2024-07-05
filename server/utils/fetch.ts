@@ -6,19 +6,20 @@ import type { PackageManifest, PackageManifestError } from '../../shared/types'
 const DOC_ABBREVIATED = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
 const DOC_FULL = 'application/json'
 const REGISTRY = 'https://registry.npmjs.org/'
+const USER_AGENT = `get-npm-meta`
 
 const promiseCache = new Map<string, ReturnType<typeof _fetchPackageManifest>>()
 
 const FullManifest = true
 
-async function _fetchPackageManifest(name: string): Promise<PackageManifest> {
+async function _fetchPackageManifest(name: string, registry: string, userAgent: string): Promise<PackageManifest> {
   console.log('Fetching package:', name)
 
-  const url = joinURL(REGISTRY, name)
+  const url = joinURL(registry, name)
 
   const packument = await $fetch(url, {
     headers: {
-      'user-agent': `get-npm-meta`,
+      'user-agent': userAgent,
       'accept': FullManifest ? DOC_FULL : DOC_ABBREVIATED,
     },
   }) as unknown as Packument
@@ -32,7 +33,7 @@ async function _fetchPackageManifest(name: string): Promise<PackageManifest> {
   }
 }
 
-const CACHE_TIMEOUT = /* 30min */ 1000 * 60 * 15
+const CACHE_TIMEOUT = /* 15min */ 1000 * 60 * 15
 const CACHE_TIMEOUT_FORCE = /* 30sec */ 1000 * 30
 
 export async function fetchPackageManifest(name: string, force = false) {
@@ -41,11 +42,14 @@ export async function fetchPackageManifest(name: string, force = false) {
     return promiseCache.get(name)
   }
 
+  const config = useRuntimeConfig()
   const storage = useStorage<PackageManifest | PackageManifestError>('manifest')
   const storedData = await storage.getItem(name)
 
   if (storedData) {
-    const timeout = force ? CACHE_TIMEOUT_FORCE : CACHE_TIMEOUT
+    const cacheTimeoutForce = config.app.cacheTimeoutForce || CACHE_TIMEOUT_FORCE
+    const cacheTimeout = config.app.cacheTimeout || CACHE_TIMEOUT
+    const timeout = force ? cacheTimeoutForce : cacheTimeout
     // Long-term cache in unstorage
     if (storedData.lastSynced + timeout > Date.now()) {
       if ('error' in storedData)
@@ -58,7 +62,9 @@ export async function fetchPackageManifest(name: string, force = false) {
     }
   }
 
-  const promise = _fetchPackageManifest(name)
+  const registryUrl = config.app.registryUrl || REGISTRY
+  const registryUserAgent = config.app.registryUserAgent || USER_AGENT
+  const promise = _fetchPackageManifest(name, registryUrl, registryUserAgent)
     .then(async (res) => {
       await storage.setItem(name, res)
       return res
