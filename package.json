@@ -23,7 +23,6 @@
     "bumpp": "^9.4.1",
     "eslint": "^9.6.0",
     "esno": "^4.7.0",
-    "fast-glob": "^3.3.2",
     "lint-staged": "^15.2.7",
     "rimraf": "^5.0.7",
     "simple-git-hooks": "^2.11.1",
