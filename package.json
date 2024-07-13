@@ -2,7 +2,7 @@
   "type": "module",
   "version": "0.2.1",
   "private": true,
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@9.5.0",
   "scripts": {
     "build": "pnpm -r run build",
     "build:server": "pnpm -C server run build",
@@ -16,22 +16,22 @@
     "prepare": "simple-git-hooks"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.21.2",
-    "@antfu/ni": "^0.21.12",
+    "@antfu/eslint-config": "^2.22.0",
+    "@antfu/ni": "^0.22.0",
     "@antfu/utils": "^0.7.10",
-    "@types/node": "^20.14.9",
+    "@types/node": "^20.14.10",
     "bumpp": "^9.4.1",
-    "eslint": "^9.6.0",
+    "eslint": "^9.7.0",
     "esno": "^4.7.0",
     "lint-staged": "^15.2.7",
-    "rimraf": "^5.0.7",
+    "rimraf": "^5.0.9",
     "simple-git-hooks": "^2.11.1",
-    "tsx": "^4.16.0",
-    "typescript": "^5.5.2",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3",
     "unbuild": "^2.0.0",
-    "vite": "^5.3.2",
-    "vitest": "^1.6.0",
-    "zx": "^8.1.3"
+    "vite": "^5.3.3",
+    "vitest": "^2.0.2",
+    "zx": "^8.1.4"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
