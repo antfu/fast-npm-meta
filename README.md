@@ -192,6 +192,22 @@ const metadata = await getLatestVersion('vite')
 console.log(metadata.version) // 5.3.2
 ```
 
+## Configuration
+
+The tool does not require any preliminary configuration to work, but you can override some default parameters through [environment variables or .env files](https://nitro.unjs.io/guide/configuration). The main ones:
+
+| Option                | Description                      | Default                                |
+|-----------------------|----------------------------------|----------------------------------------|
+| `PORT`                | Port to listen on                | `3000`                                 |
+| `HOST`                | Host to serve                    |                                        |
+| `REPO_URL`            | Code reposotory URL              | https://github.com/antfu/fast-npm-meta |
+| `CACHE_TIMEOUT`       | Cache timeout in ms              | `900000` (15m)                         |
+| `CACHE_TIMEOUT_FORCE` | Cache timeout for forced updates | `30000` (30s)                          |
+| `REGISTRY_URL`        | NPM registry URL                 | https://registry.npmjs.org             |
+| `REGISTRY_USER_AGENT` | User agent for NPM registry requests | `get-npm-meta`                         |
+
+For more information, follow [the official Nitro guides](https://nitro.unjs.io/deploy/runtimes/node#environment-variables).
+
 ## Sponsors
 
 <p align="center">
