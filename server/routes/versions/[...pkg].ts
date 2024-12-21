@@ -34,11 +34,13 @@ export default eventHandler(async (event) => {
         }
       }
 
+      const versionsEngines = {}
       const time: PackageVersionsInfo['time'] = {
         created: manifest.time.created,
         modified: manifest.time.modified,
       }
       for (const ver of versions) {
+        versionsEngines[ver] = manifest.versionsEngines[ver]
         time[ver] = manifest.time[ver]
       }
 
@@ -46,6 +48,7 @@ export default eventHandler(async (event) => {
         name: spec.name,
         distTags: manifest.distTags,
         versions,
+        versionsEngines,
         time,
         specifier: spec.fetchSpec,
         lastSynced: manifest.lastSynced,
