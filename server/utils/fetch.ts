@@ -2,6 +2,7 @@
 import { joinURL } from 'ufo'
 import { $fetch } from 'ofetch'
 import type { PackageManifest, PackageManifestError } from '../../shared/types'
+import { mapEnginesWithVersions } from './helpers'
 
 const DOC_ABBREVIATED = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
 const DOC_FULL = 'application/json'
@@ -28,6 +29,7 @@ async function _fetchPackageManifest(name: string, registry: string, userAgent: 
     name: packument.name,
     distTags: packument['dist-tags'],
     versions: Object.keys(packument.versions),
+    versionsEngines: mapEnginesWithVersions(packument.versions),
     time: packument.time,
     lastSynced: Date.now(),
   }
@@ -91,6 +93,7 @@ export interface Packument {
    * An object where each key is a version, and each value is the manifest for
    * that version.
    */
+  'engines': Record<string, Record<string, string>>
   'versions': Record<string, Omit<Packument, 'versions'>>
   /**
    * An object mapping dist-tags to version numbers. This is how `foo@latest`

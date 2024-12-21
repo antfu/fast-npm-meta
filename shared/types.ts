@@ -1,5 +1,8 @@
 export interface PackageManifest {
   name: string
+  versionsEngines?: Record<string, Record<string, string> & {
+    node?: string
+  }>
   distTags: Record<string, string> & {
     latest: string
   }
@@ -15,6 +18,8 @@ export interface PackageVersionsInfo extends PackageManifest {
   specifier: string
 }
 
+export interface PackageEnginesInfo extends Omit<PackageManifest, 'distTags' | 'versions' | 'time'> {}
+
 export interface PackageManifestError {
   error: string
   lastSynced: number
@@ -22,6 +27,9 @@ export interface PackageManifestError {
 
 export interface ResolvedPackageVersion {
   name: string
+  engines?: Record<string, string> & {
+    node?: string
+  }
   version: string | null
   specifier: string
   publishedAt: string | null

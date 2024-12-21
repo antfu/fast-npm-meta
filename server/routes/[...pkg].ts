@@ -14,6 +14,7 @@ export default eventHandler(async (event) => {
       let version: string | null = null
       let specifier = 'latest'
       let time: string | null = null
+      let engines: Record<string, string> | null = null
 
       if (spec.type === 'tag') {
         specifier = spec.fetchSpec
@@ -40,10 +41,12 @@ export default eventHandler(async (event) => {
         throw new Error(`Unsupported spec: ${JSON.stringify(spec)}`)
       }
 
+      engines = data.versionsEngines[version]
       time = data.time[version] ?? null
 
       return {
         name: spec.name,
+        engines,
         specifier,
         version,
         publishedAt: time,
