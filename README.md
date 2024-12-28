@@ -38,9 +38,13 @@ Returns
 ```json
 {
   "name": "vite",
+  "engines": {
+    "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
+  },
   "specifier": "latest",
-  "version": "5.3.2",
-  "lastSynced": 1719798752827
+  "version": "6.0.6",
+  "publishedAt": "2024-12-26T02:23:38.440Z",
+  "lastSynced": 1735331047889
 }
 ```
 
@@ -55,9 +59,13 @@ Returns
 ```json
 {
   "name": "vite",
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  },
   "specifier": "alpha",
-  "version": "6.0.0-alpha.18",
-  "lastSynced": 1719798752827
+  "version": "6.0.0-alpha.24",
+  "publishedAt": "2024-09-04T09:15:20.820Z",
+  "lastSynced": 1735331047889
 }
 ```
 
@@ -72,9 +80,13 @@ Returns
 ```json
 {
   "name": "vite",
+  "engines": {
+    "node": ">=12.2.0"
+  },
   "specifier": "^2.1.0",
   "version": "2.9.18",
-  "lastSynced": 1719798752827
+  "publishedAt": "2024-03-24T15:06:20.353Z",
+  "lastSynced": 1735331047889
 }
 ```
 
@@ -92,21 +104,30 @@ Returns an array of objects:
 [
   {
     "name": "vite",
+    "engines": {
+      "node": "^18.0.0 || >=20.0.0"
+    },
     "specifier": "alpha",
-    "version": "6.0.0-alpha.18",
-    "lastSynced": 1719798752827
+    "version": "6.0.0-alpha.24",
+    "publishedAt": "2024-09-04T09:15:20.820Z",
+    "lastSynced": 1735334887288
   },
   {
     "name": "vue",
     "specifier": "latest",
-    "version": "3.4.31",
-    "lastSynced": 1719799051285
+    "version": "3.5.13",
+    "publishedAt": "2024-11-15T14:48:51.738Z",
+    "lastSynced": 1735334879928
   },
   {
     "name": "nuxt",
+    "engines": {
+      "node": "^14.18.0 || >=16.10.0"
+    },
     "specifier": "~3.11",
     "version": "3.11.2",
-    "lastSynced": 1719799051232
+    "publishedAt": "2024-04-04T16:10:14.223Z",
+    "lastSynced": 1735334879596
   }
 ]
 ```
@@ -165,6 +186,72 @@ curl https://npm.antfu.dev/versions/vite@5
     // ...
   ],
   "lastSynced": 1719801079260
+}
+```
+
+#### 📦 Get All Versions and Tags of Multiple Packages
+
+Use `+` to separate the package names.
+
+```sh
+curl https://npm.antfu.dev/versions/vite+vue+nuxt
+```
+
+### `GET /engines/:pkg`
+
+#### 📦 Get All Versions and Tags of a Package
+
+```sh
+curl https://npm.antfu.dev/engines/vite
+```
+
+```jsonc
+{
+  "name": "vite",
+  "versionsEngines": {
+    "0.6.1": {
+      "node": ">=10.0.0"
+    },
+    "0.7.0": {
+      "node": ">=10.0.0"
+    },
+    "0.8.0": {
+      "node": ">=10.0.0"
+    },
+    "0.8.1": {
+      "node": ">=10.0.0"
+    }
+    // ...
+  },
+  "lastSynced": 1735335830574
+}
+```
+
+#### 📦 Get Versions satisfies the Version Range
+
+```sh
+curl https://npm.antfu.dev/engines/vite@5
+```
+
+```jsonc
+{
+  "name": "vite",
+  "versionsEngines": {
+    "5.0.0": {
+      "node": "^18.0.0 || >=20.0.0"
+    },
+    "5.0.1": {
+      "node": "^18.0.0 || >=20.0.0"
+    },
+    "5.0.2": {
+      "node": "^18.0.0 || >=20.0.0"
+    },
+    "5.0.3": {
+      "node": "^18.0.0 || >=20.0.0"
+    }
+    // ...
+  },
+  "lastSynced": 1735335830574
 }
 ```
 
