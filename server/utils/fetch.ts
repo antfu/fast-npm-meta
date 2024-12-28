@@ -90,10 +90,14 @@ export async function fetchPackageManifest(name: string, force = false) {
 export interface Packument {
   'name': string
   /**
-   * An object where each key is a version, and each value is the manifest for
+   * An object where each key is a version, and each value is the engines for
    * that version.
    */
   'engines': Record<string, Record<string, string>>
+  /**
+   * An object where each key is a version, and each value is the manifest for
+   * that version.
+   */
   'versions': Record<string, Omit<Packument, 'versions'>>
   /**
    * An object mapping dist-tags to version numbers. This is how `foo@latest`
