@@ -140,12 +140,17 @@ You can pass options with query parameters.
 
 <details>
 <summary>
-<h5>Engines</h5>
-<p>To show engines part for each version.</p>
+<h5> Engines: Add engines for each versions</h5>
 </summary>
+
+###### engines=append (default)
+
+> [!NOTE]
+> As it is the default value you can use the shorthand and don't set a value
 
 ```sh
 curl https://npm.antfu.dev/versions/vite?engines
+curl https://npm.antfu.dev/versions/vite?engines=append
 ```
 
 ```jsonc
@@ -164,6 +169,45 @@ curl https://npm.antfu.dev/versions/vite?engines
     // ...
   ],
   "versionsEngines": {
+    "0.6.1": {
+      "node": ">=10.0.0"
+    },
+    "0.7.0": {
+      "node": ">=10.0.0"
+    },
+    "0.8.0": {
+      "node": ">=10.0.0"
+    }
+    // ...
+  },
+  "time": {
+    "created": "2020-04-21T05:05:15.476Z",
+    "modified": "2024-12-26T02:23:38.890Z",
+    "0.1.0": "2020-04-21T05:05:15.591Z",
+    "0.1.1": "2020-04-21T05:06:51.876Z"
+    // ...
+  },
+  "specifier": "*",
+  "lastSynced": 1735407539388
+}
+```
+
+###### engines=concat
+
+```sh
+curl https://npm.antfu.dev/versions/vite?engines=concat
+```
+
+```jsonc
+{
+  "name": "vite",
+  "distTags": {
+    "alpha": "6.0.0-alpha.24",
+    "previous": "5.1.8",
+    "beta": "6.0.0-beta.10",
+    "latest": "6.0.6"
+  },
+  "versions": {
     "0.6.1": {
       "node": ">=10.0.0"
     },
