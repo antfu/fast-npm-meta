@@ -136,10 +136,13 @@ Returns an array of objects:
 
 #### ❓Options
 
-You can pass options with query parameters
+You can pass options with query parameters.
 
 <details>
-<summary><h5>Engines</h5></summary>
+<summary>
+<h5>Engines</h5>
+<p>To show engines part for each version.</p>
+</summary>
 
 ```sh
 curl https://npm.antfu.dev/versions/vite?engines
