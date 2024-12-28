@@ -143,10 +143,9 @@ You can pass options with query parameters.
 <h5> Engines: Add engines for each versions</h5>
 </summary>
 
-###### engines=append (default)
+###### append (default)
 
-> [!NOTE]
-> As it is the default value you can use the shorthand and don't set a value
+As it is the default value you can use the shorthand and don't set a value
 
 ```sh
 curl https://npm.antfu.dev/versions/vite?engines
@@ -192,7 +191,7 @@ curl https://npm.antfu.dev/versions/vite?engines=append
 }
 ```
 
-###### engines=concat
+###### concat
 
 ```sh
 curl https://npm.antfu.dev/versions/vite?engines=concat
