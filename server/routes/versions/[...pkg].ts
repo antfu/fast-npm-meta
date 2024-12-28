@@ -34,7 +34,7 @@ export default eventHandler(async (event) => {
         }
       }
 
-      const versionsEngines = {}
+      const versionsEngines: Packument['engines'] = {}
       const time: PackageVersionsInfo['time'] = {
         created: manifest.time.created,
         modified: manifest.time.modified,
@@ -48,7 +48,7 @@ export default eventHandler(async (event) => {
         name: spec.name,
         distTags: manifest.distTags,
         versions,
-        versionsEngines,
+        versionsEngines: 'engines' in query ? versionsEngines : undefined,
         time,
         specifier: spec.fetchSpec,
         lastSynced: manifest.lastSynced,
