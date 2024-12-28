@@ -14,7 +14,10 @@ export interface PackageManifest {
   lastSynced: number
 }
 
-export interface PackageVersionsInfo extends PackageManifest {
+export interface PackageVersionsInfo extends Omit<PackageManifest, 'versions'> {
+  versions: string[] | Record<string, Record<string, string> & {
+    node?: string
+  }>
   specifier: string
 }
 

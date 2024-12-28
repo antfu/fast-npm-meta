@@ -1,16 +1,18 @@
 import semver from 'semver'
+import type { H3Error } from 'h3'
 import { fetchPackageManifest } from '../../utils/fetch'
 import type { PackageVersionsInfo } from '../../../shared/types'
 import { handlePackagesQuery } from '../../utils/handle'
+import { handleOptions } from '~/utils/helpers'
 
 export default eventHandler(async (event) => {
   const query = getQuery(event)
 
-  return handlePackagesQuery<PackageVersionsInfo>(
+  return handlePackagesQuery<PackageVersionsInfo | H3Error>(
     event,
     async (spec) => {
       const manifest = await fetchPackageManifest(spec.name, !!query.force)
-      let versions = manifest.versions
+      let versions: string[] | Packument['engines'] = manifest.versions
 
       if (spec.type === 'range' && spec.fetchSpec !== '*') {
         const satisfiedVersions = versions.filter((ver) => {
@@ -34,7 +36,7 @@ export default eventHandler(async (event) => {
         }
       }
 
-      const versionsEngines: Packument['engines'] = {}
+      let versionsEngines: Packument['engines'] = {}
       const time: PackageVersionsInfo['time'] = {
         created: manifest.time.created,
         modified: manifest.time.modified,
@@ -44,11 +46,28 @@ export default eventHandler(async (event) => {
         time[ver] = manifest.time[ver]
       }
 
+      const error = handleOptions(query, {
+        engines: {
+          'concat': () => {
+            versions = versionsEngines
+            versionsEngines = undefined
+          },
+          'append': () => null,
+          '': () => null,
+          'default': () => {
+            versionsEngines = undefined
+          },
+        },
+      })
+      if (error) {
+        return createError(error)
+      }
+
       return {
         name: spec.name,
         distTags: manifest.distTags,
         versions,
-        versionsEngines: 'engines' in query ? versionsEngines : undefined,
+        versionsEngines,
         time,
         specifier: spec.fetchSpec,
         lastSynced: manifest.lastSynced,
