@@ -134,6 +134,57 @@ Returns an array of objects:
 
 ### `GET /versions/:pkg`
 
+#### ❓Options
+
+You can pass options with query parameters
+
+<details>
+<summary><h5>Engines</h5></summary>
+
+```sh
+curl https://npm.antfu.dev/versions/vite?engines
+```
+
+```jsonc
+{
+  "name": "vite",
+  "distTags": {
+    "alpha": "6.0.0-alpha.24",
+    "previous": "5.1.8",
+    "beta": "6.0.0-beta.10",
+    "latest": "6.0.6"
+  },
+  "versions": [
+    "0.1.0",
+    "0.1.1",
+    "0.1.2"
+    // ...
+  ],
+  "versionsEngines": {
+    "0.6.1": {
+      "node": ">=10.0.0"
+    },
+    "0.7.0": {
+      "node": ">=10.0.0"
+    },
+    "0.8.0": {
+      "node": ">=10.0.0"
+    }
+    // ...
+  },
+  "time": {
+    "created": "2020-04-21T05:05:15.476Z",
+    "modified": "2024-12-26T02:23:38.890Z",
+    "0.1.0": "2020-04-21T05:05:15.591Z",
+    "0.1.1": "2020-04-21T05:06:51.876Z"
+    // ...
+  },
+  "specifier": "*",
+  "lastSynced": 1735407539388
+}
+```
+</details>
+
 #### 📦 Get All Versions and Tags of a Package
 
 ```sh
