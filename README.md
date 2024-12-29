@@ -80,9 +80,6 @@ Returns
 ```json
 {
   "name": "vite",
-  "engines": {
-    "node": ">=12.2.0"
-  },
   "specifier": "^2.1.0",
   "version": "2.9.18",
   "publishedAt": "2024-03-24T15:06:20.353Z",
@@ -104,9 +101,6 @@ Returns an array of objects:
 [
   {
     "name": "vite",
-    "engines": {
-      "node": "^18.0.0 || >=20.0.0"
-    },
     "specifier": "alpha",
     "version": "6.0.0-alpha.24",
     "publishedAt": "2024-09-04T09:15:20.820Z",
@@ -121,9 +115,6 @@ Returns an array of objects:
   },
   {
     "name": "nuxt",
-    "engines": {
-      "node": "^14.18.0 || >=16.10.0"
-    },
     "specifier": "~3.11",
     "version": "3.11.2",
     "publishedAt": "2024-04-04T16:10:14.223Z",
@@ -143,7 +134,7 @@ You can pass options with query parameters.
 <h5> Engines: Add engines for each versions</h5>
 </summary>
 
-###### append (default)
+###### Append (_default_)
 
 As it is the default value you can use the shorthand and don't set a value
 
@@ -191,7 +182,7 @@ curl https://npm.antfu.dev/versions/vite?engines=append
 }
 ```
 
-###### concat
+###### Concat
 
 ```sh
 curl https://npm.antfu.dev/versions/vite?engines=concat
@@ -296,7 +287,7 @@ curl https://npm.antfu.dev/versions/vite+vue+nuxt
 
 ### `GET /engines/:pkg`
 
-#### 📦 Get All Versions and Tags of a Package
+#### 📦 Get All Engines for Each Versions
 
 ```sh
 curl https://npm.antfu.dev/engines/vite
@@ -324,7 +315,7 @@ curl https://npm.antfu.dev/engines/vite
 }
 ```
 
-#### 📦 Get Versions satisfies the Version Range
+#### 📦 Get Engines with versions that satisfies the Version Range
 
 ```sh
 curl https://npm.antfu.dev/engines/vite@5
@@ -352,12 +343,12 @@ curl https://npm.antfu.dev/engines/vite@5
 }
 ```
 
-#### 📦 Get All Versions and Tags of Multiple Packages
+#### 📦 Get All Engines with Versions of Multiple Packages
 
 Use `+` to separate the package names.
 
 ```sh
-curl https://npm.antfu.dev/versions/vite+vue+nuxt
+curl https://npm.antfu.dev/engines/vite+vue+nuxt
 ```
 
 ## JavaScript API
