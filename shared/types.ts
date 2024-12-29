@@ -15,9 +15,7 @@ export interface PackageManifest {
 }
 
 export interface PackageVersionsInfo extends Omit<PackageManifest, 'versions'> {
-  versions: string[] | Record<string, Record<string, string> & {
-    node?: string
-  }>
+  versions: string[] | PackageManifest['versionsEngines']
   specifier: string
 }
 
@@ -30,9 +28,7 @@ export interface PackageManifestError {
 
 export interface ResolvedPackageVersion {
   name: string
-  engines?: Record<string, string> & {
-    node?: string
-  }
+  engines?: PackageManifest['versionsEngines']
   version: string | null
   specifier: string
   publishedAt: string | null

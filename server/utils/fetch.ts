@@ -93,7 +93,9 @@ export interface Packument {
    * An object where each key is a version, and each value is the engines for
    * that version.
    */
-  'engines': Record<string, Record<string, string>>
+  'engines': Record<string, Record<string, string> & {
+    node?: string
+  }>
   /**
    * An object where each key is a version, and each value is the manifest for
    * that version.

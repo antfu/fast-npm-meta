@@ -17,6 +17,10 @@ export interface GetVersionsOptions extends FetchOptions {
    * Include all versions that are newer than the specified version
    */
   loose?: boolean
+  /**
+   * Append (default) or concat engines part of the package.json
+   */
+  engines?: '' | 'append' | 'concat'
 }
 
 export interface GetLatestVersionOptions extends FetchOptions {
@@ -74,6 +78,7 @@ export async function getVersionsBatch(
   let query = [
     options.force ? 'force=true' : '',
     options.loose ? 'loose=true' : '',
+    options.engines !== undefined ? `engines=${options.engines}` : '',
   ].filter(Boolean).join('&')
   if (query)
     query = `?${query}`
