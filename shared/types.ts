@@ -28,7 +28,7 @@ export interface PackageManifestError {
 
 export interface ResolvedPackageVersion {
   name: string
-  engines?: PackageManifest['versionsEngines']
+  engines?: Record<string, string>
   version: string | null
   specifier: string
   publishedAt: string | null
