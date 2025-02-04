@@ -13,8 +13,6 @@ export default eventHandler(async (event) => {
 
       let version: string | null = null
       let specifier = 'latest'
-      let time: string | null = null
-      let engines: Record<string, string> | null = null
 
       if (spec.type === 'tag') {
         specifier = spec.fetchSpec
@@ -30,7 +28,7 @@ export default eventHandler(async (event) => {
         if (!semver.satisfies(maxVersion, spec.fetchSpec))
           maxVersion = null
 
-        data.versions.forEach((ver) => {
+        Object.keys(data.versionsMeta).forEach((ver) => {
           if (semver.satisfies(ver, spec.fetchSpec)) {
             if (!maxVersion || semver.lte(ver, maxVersion))
               version = ver
@@ -41,17 +39,21 @@ export default eventHandler(async (event) => {
         throw new Error(`Unsupported spec: ${JSON.stringify(spec)}`)
       }
 
-      engines = data.versionsEngines[version]
-      time = data.time[version] ?? null
+      const meta = data.versionsMeta[version]
 
-      return {
+      const result: ResolvedPackageVersion = {
         name: spec.name,
-        engines,
         specifier,
         version,
-        publishedAt: time,
+        publishedAt: meta.time,
         lastSynced: data.lastSynced,
       }
+
+      if (query.metadata) {
+        Object.assign(result, meta)
+      }
+
+      return result
     },
   )
 })

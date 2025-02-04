@@ -1,18 +1,17 @@
 import semver from 'semver'
 import type { H3Error } from 'h3'
 import { fetchPackageManifest } from '../../utils/fetch'
-import type { PackageVersionsInfo } from '../../../shared/types'
+import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata } from '../../../shared/types'
 import { handlePackagesQuery } from '../../utils/handle'
-import { handleOptions } from '~/utils/helpers'
 
 export default eventHandler(async (event) => {
   const query = getQuery(event)
 
-  return handlePackagesQuery<PackageVersionsInfo | H3Error>(
+  return handlePackagesQuery<PackageVersionsInfoWithMetadata | PackageVersionsInfo | H3Error>(
     event,
     async (spec) => {
       const manifest = await fetchPackageManifest(spec.name, !!query.force)
-      let versions: string[] | Packument['engines'] = manifest.versions
+      let versions: string[] = Object.keys(manifest.versionsMeta)
 
       if (spec.type === 'range' && spec.fetchSpec !== '*') {
         const satisfiedVersions = versions.filter((ver) => {
@@ -36,41 +35,33 @@ export default eventHandler(async (event) => {
         }
       }
 
-      let versionsEngines: Packument['engines'] = {}
-      const time: PackageVersionsInfo['time'] = {
-        created: manifest.time.created,
-        modified: manifest.time.modified,
-      }
-      for (const ver of versions) {
-        versionsEngines[ver] = manifest.versionsEngines[ver]
-        time[ver] = manifest.time[ver]
-      }
-
-      const error = handleOptions(query, {
-        engines: {
-          'concat': () => {
-            versions = versionsEngines
-            versionsEngines = undefined
-          },
-          'append': () => null,
-          '': () => null,
-          'default': () => {
-            versionsEngines = undefined
-          },
-        },
-      })
-      if (error) {
-        return createError(error)
+      if (query.metadata) {
+        return {
+          name: spec.name,
+          specifier: spec.fetchSpec,
+          distTags: manifest.distTags,
+          lastSynced: manifest.lastSynced,
+          timeCreated: manifest.timeCreated,
+          timeModified: manifest.timeModified,
+          versionsMeta: Object.fromEntries(
+            versions.map(v => [v, manifest.versionsMeta[v]]),
+          ),
+        } satisfies PackageVersionsInfoWithMetadata
       }
 
-      return {
+      return <PackageVersionsInfo>{
         name: spec.name,
-        distTags: manifest.distTags,
-        versions,
-        versionsEngines,
-        time,
         specifier: spec.fetchSpec,
+        distTags: manifest.distTags,
         lastSynced: manifest.lastSynced,
+        versions,
+        time: {
+          ...Object.fromEntries(
+            versions.map(ver => [ver, manifest.versionsMeta[ver]?.time]),
+          ),
+          created: manifest.timeCreated,
+          modified: manifest.timeModified,
+        },
       }
     },
   )

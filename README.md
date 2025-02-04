@@ -38,9 +38,6 @@ Returns
 ```json
 {
   "name": "vite",
-  "engines": {
-    "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
-  },
   "specifier": "latest",
   "version": "6.0.6",
   "publishedAt": "2024-12-26T02:23:38.440Z",
@@ -59,9 +56,6 @@ Returns
 ```json
 {
   "name": "vite",
-  "engines": {
-    "node": "^18.0.0 || >=20.0.0"
-  },
   "specifier": "alpha",
   "version": "6.0.0-alpha.24",
   "publishedAt": "2024-09-04T09:15:20.820Z",
@@ -80,9 +74,6 @@ Returns
 ```json
 {
   "name": "vite",
-  "engines": {
-    "node": ">=12.2.0"
-  },
   "specifier": "^2.1.0",
   "version": "2.9.18",
   "publishedAt": "2024-03-24T15:06:20.353Z",
@@ -104,9 +95,6 @@ Returns an array of objects:
 [
   {
     "name": "vite",
-    "engines": {
-      "node": "^18.0.0 || >=20.0.0"
-    },
     "specifier": "alpha",
     "version": "6.0.0-alpha.24",
     "publishedAt": "2024-09-04T09:15:20.820Z",
@@ -121,9 +109,6 @@ Returns an array of objects:
   },
   {
     "name": "nuxt",
-    "engines": {
-      "node": "^14.18.0 || >=16.10.0"
-    },
     "specifier": "~3.11",
     "version": "3.11.2",
     "publishedAt": "2024-04-04T16:10:14.223Z",
@@ -132,104 +117,28 @@ Returns an array of objects:
 ]
 ```
 
+#### 📦 Get Extra Metadata
+
+You can pass `?metadata=true` to get additional metadata about the package, such as `engines`, `deprecated`, etc.
+
+```sh
+curl https://npm.antfu.dev/versions/vite@^2.1.0?metadata=true
+```
+
+```json
+{
+  "name": "vite",
+  "engines": {
+    "node": ">=12.2.0"
+  },
+  "specifier": "^2.1.0",
+  "version": "2.9.18",
+  "publishedAt": "2024-03-24T15:06:20.353Z",
+  "lastSynced": 1735496799048
+}
+```
+
 ### `GET /versions/:pkg`
-
-#### ❓Options
-
-You can pass options with query parameters.
-
-<details>
-<summary>
-<h5> Engines: Add engines for each versions</h5>
-</summary>
-
-###### Append (_default_)
-
-As it is the default value you can use the shorthand and don't set a value
-
-```sh
-curl https://npm.antfu.dev/versions/vite?engines
-curl https://npm.antfu.dev/versions/vite?engines=append
-```
-
-```jsonc
-{
-  "name": "vite",
-  "distTags": {
-    "alpha": "6.0.0-alpha.24",
-    "previous": "5.1.8",
-    "beta": "6.0.0-beta.10",
-    "latest": "6.0.6"
-  },
-  "versions": [
-    "0.1.0",
-    "0.1.1",
-    "0.1.2"
-    // ...
-  ],
-  "versionsEngines": {
-    "0.6.1": {
-      "node": ">=10.0.0"
-    },
-    "0.7.0": {
-      "node": ">=10.0.0"
-    },
-    "0.8.0": {
-      "node": ">=10.0.0"
-    }
-    // ...
-  },
-  "time": {
-    "created": "2020-04-21T05:05:15.476Z",
-    "modified": "2024-12-26T02:23:38.890Z",
-    "0.1.0": "2020-04-21T05:05:15.591Z",
-    "0.1.1": "2020-04-21T05:06:51.876Z"
-    // ...
-  },
-  "specifier": "*",
-  "lastSynced": 1735407539388
-}
-```
-
-###### Concat
-
-```sh
-curl https://npm.antfu.dev/versions/vite?engines=concat
-```
-
-```jsonc
-{
-  "name": "vite",
-  "distTags": {
-    "alpha": "6.0.0-alpha.24",
-    "previous": "5.1.8",
-    "beta": "6.0.0-beta.10",
-    "latest": "6.0.6"
-  },
-  "versions": {
-    "0.6.1": {
-      "node": ">=10.0.0"
-    },
-    "0.7.0": {
-      "node": ">=10.0.0"
-    },
-    "0.8.0": {
-      "node": ">=10.0.0"
-    }
-    // ...
-  },
-  "time": {
-    "created": "2020-04-21T05:05:15.476Z",
-    "modified": "2024-12-26T02:23:38.890Z",
-    "0.1.0": "2020-04-21T05:05:15.591Z",
-    "0.1.1": "2020-04-21T05:06:51.876Z"
-    // ...
-  },
-  "specifier": "*",
-  "lastSynced": 1735407539388
-}
-```
-</details>
 
 #### 📦 Get All Versions and Tags of a Package
 
@@ -249,12 +158,7 @@ curl https://npm.antfu.dev/versions/vite
   "versions": [
     "0.1.0",
     "0.1.1",
-    "0.1.2",
-    "0.2.0",
-    "0.3.0",
-    "0.3.1",
-    "0.3.2",
-    "0.4.0"
+    "0.1.2"
     // ...
   ],
   "lastSynced": 1719801079260
@@ -294,70 +198,45 @@ Use `+` to separate the package names.
 curl https://npm.antfu.dev/versions/vite+vue+nuxt
 ```
 
-### `GET /engines/:pkg`
+This will responses with an array
 
-#### 📦 Get All Engines for Each Versions
+### 📦 Get Versions with Metadata
+
+Add `?metadata=true` to the URL to get additional metadata about each version, such as `engines`, `deprecated`, etc.
+
+This would also alter the response format. `versions` and `time` will be omitted, and instead a `versionsMeta` object will be returned.
 
 ```sh
-curl https://npm.antfu.dev/engines/vite
+curl https://npm.antfu.dev/versions/vite?metadata=true
 ```
 
 ```jsonc
 {
   "name": "vite",
-  "versionsEngines": {
-    "0.6.1": {
-      "node": ">=10.0.0"
-    },
-    "0.7.0": {
-      "node": ">=10.0.0"
-    },
-    "0.8.0": {
-      "node": ">=10.0.0"
-    },
-    "0.8.1": {
-      "node": ">=10.0.0"
-    }
-    // ...
+  "distTags": {
+    "previous": "5.2.5",
+    "alpha": "6.0.0-alpha.18",
+    "beta": "5.3.0-beta.2",
+    "latest": "5.3.2"
   },
-  "lastSynced": 1735335830574
-}
-```
-
-#### 📦 Get Engines with versions that satisfies the Version Range
-
-```sh
-curl https://npm.antfu.dev/engines/vite@5
-```
-
-```jsonc
-{
-  "name": "vite",
-  "versionsEngines": {
+  "versionsMeta": {
     "5.0.0": {
-      "node": "^18.0.0 || >=20.0.0"
+      "version": "5.0.0",
+      "engines": {
+        "node": ">=12.0.0"
+      },
+      "deprecated": "This version is deprecated"
     },
     "5.0.1": {
-      "node": "^18.0.0 || >=20.0.0"
-    },
-    "5.0.2": {
-      "node": "^18.0.0 || >=20.0.0"
-    },
-    "5.0.3": {
-      "node": "^18.0.0 || >=20.0.0"
+      "version": "5.0.1",
+      "engines": {
+        "node": ">=12.0.0"
+      }
     }
     // ...
   },
-  "lastSynced": 1735335830574
+  "lastSynced": 1719801079260
 }
-```
-
-#### 📦 Get All Engines with Versions of Multiple Packages
-
-Use `+` to separate the package names.
-
-```sh
-curl https://npm.antfu.dev/engines/vite+vue+nuxt
 ```
 
 ## JavaScript API

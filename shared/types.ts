@@ -1,34 +1,42 @@
 export interface PackageManifest {
   name: string
-  versionsEngines?: Record<string, Record<string, string> & {
-    node?: string
-  }>
   distTags: Record<string, string> & {
     latest: string
   }
-  versions: string[]
-  time: Record<string, string> & {
-    created: string
-    modified: string
-  }
+  versionsMeta: Record<string, PackageVersionMeta>
+  timeCreated: string
+  timeModified: string
   lastSynced: number
 }
 
-export interface PackageVersionsInfo extends Omit<PackageManifest, 'versions'> {
-  versions: string[] | PackageManifest['versionsEngines']
-  specifier: string
+export type Engines = Partial<Record<string, string>>
+
+export interface PackageVersionMeta {
+  time?: string
+  engines?: Engines
+  deprecated?: string
 }
 
-export interface PackageEnginesInfo extends Omit<PackageManifest, 'distTags' | 'versions' | 'time'> {}
+export interface PackageVersionsInfo extends Pick<PackageManifest, 'name' | 'distTags' | 'lastSynced'> {
+  versions: string[]
+  specifier: string
+  time: {
+    created: string
+    modified: string
+  } & Record<string, string>
+}
+
+export interface PackageVersionsInfoWithMetadata extends PackageManifest {
+  specifier: string
+}
 
 export interface PackageManifestError {
   error: string
   lastSynced: number
 }
 
-export interface ResolvedPackageVersion {
+export interface ResolvedPackageVersion extends Partial<PackageVersionMeta> {
   name: string
-  engines?: Record<string, string>
   version: string | null
   specifier: string
   publishedAt: string | null
