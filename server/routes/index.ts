@@ -4,7 +4,7 @@ export default eventHandler(() => {
   const config = useRuntimeConfig()
 
   return {
-    name: 'fast-npm-version',
+    name: 'fast-npm-meta',
     version,
     docs: config.app.repoUrl,
     deployTime: config.app.deployTime,
