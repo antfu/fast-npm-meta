@@ -1,16 +1,17 @@
 import semver from 'semver'
+import type { H3Error } from 'h3'
 import { fetchPackageManifest } from '../../utils/fetch'
-import type { PackageVersionsInfo } from '../../../shared/types'
+import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata } from '../../../shared/types'
 import { handlePackagesQuery } from '../../utils/handle'
 
 export default eventHandler(async (event) => {
   const query = getQuery(event)
 
-  return handlePackagesQuery<PackageVersionsInfo>(
+  return handlePackagesQuery<PackageVersionsInfoWithMetadata | PackageVersionsInfo | H3Error>(
     event,
     async (spec) => {
       const manifest = await fetchPackageManifest(spec.name, !!query.force)
-      let versions = manifest.versions
+      let versions: string[] = Object.keys(manifest.versionsMeta)
 
       if (spec.type === 'range' && spec.fetchSpec !== '*') {
         const satisfiedVersions = versions.filter((ver) => {
@@ -34,21 +35,33 @@ export default eventHandler(async (event) => {
         }
       }
 
-      const time: PackageVersionsInfo['time'] = {
-        created: manifest.time.created,
-        modified: manifest.time.modified,
-      }
-      for (const ver of versions) {
-        time[ver] = manifest.time[ver]
+      if (query.metadata) {
+        return {
+          name: spec.name,
+          specifier: spec.fetchSpec,
+          distTags: manifest.distTags,
+          lastSynced: manifest.lastSynced,
+          timeCreated: manifest.timeCreated,
+          timeModified: manifest.timeModified,
+          versionsMeta: Object.fromEntries(
+            versions.map(v => [v, manifest.versionsMeta[v]]),
+          ),
+        } satisfies PackageVersionsInfoWithMetadata
       }
 
-      return {
+      return <PackageVersionsInfo>{
         name: spec.name,
-        distTags: manifest.distTags,
-        versions,
-        time,
         specifier: spec.fetchSpec,
+        distTags: manifest.distTags,
         lastSynced: manifest.lastSynced,
+        versions,
+        time: {
+          ...Object.fromEntries(
+            versions.map(ver => [ver, manifest.versionsMeta[ver]?.time]),
+          ),
+          created: manifest.timeCreated,
+          modified: manifest.timeModified,
+        },
       }
     },
   )

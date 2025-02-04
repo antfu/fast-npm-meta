@@ -1,4 +1,4 @@
-import type { PackageVersionsInfo, ResolvedPackageVersion } from '../../shared/types'
+import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata, ResolvedPackageVersion } from '../../shared/types'
 
 export interface FetchOptions {
   apiEndpoint?: string
@@ -8,7 +8,7 @@ export interface FetchOptions {
   fetch?: typeof fetch
 }
 
-export interface GetVersionsOptions extends FetchOptions {
+export interface GetVersionsOptions<WithMetadata extends boolean> extends FetchOptions {
   /**
    * By pass cache and get the latest data
    */
@@ -17,6 +17,10 @@ export interface GetVersionsOptions extends FetchOptions {
    * Include all versions that are newer than the specified version
    */
   loose?: boolean
+  /**
+   * Includes metadata, this will change the return type
+   */
+  metadata?: WithMetadata
 }
 
 export interface GetLatestVersionOptions extends FetchOptions {
@@ -24,6 +28,10 @@ export interface GetLatestVersionOptions extends FetchOptions {
    * By pass cache and get the latest data
    */
   force?: boolean
+  /**
+   * Includes metadata
+   */
+  metadata?: boolean
 }
 
 export const defaultOptions = {
@@ -45,7 +53,13 @@ export async function getLatestVersionBatch(
     fetch: fetchApi = fetch,
   } = options
 
-  const query = options.force ? '?force=true' : ''
+  let query = [
+    options.force ? 'force=true' : '',
+    options.metadata ? 'metadata=true' : '',
+  ].filter(Boolean).join('&')
+  if (query)
+    query = `?${query}`
+
   const data = await fetchApi(new URL(packages.join('+') + query, apiEndpoint))
     .then(r => r.json()) as ResolvedPackageVersion | ResolvedPackageVersion[]
 
@@ -64,8 +78,16 @@ export async function getLatestVersion(
 
 export async function getVersionsBatch(
   packages: string[],
-  options: GetVersionsOptions = {},
-): Promise<PackageVersionsInfo[]> {
+  options?: GetVersionsOptions<false>,
+): Promise<PackageVersionsInfo[]>
+export async function getVersionsBatch(
+  packages: string[],
+  options: GetVersionsOptions<true>,
+): Promise<PackageVersionsInfoWithMetadata[]>
+export async function getVersionsBatch(
+  packages: string[],
+  options: GetVersionsOptions<boolean> = {},
+): Promise<PackageVersionsInfo[] | PackageVersionsInfoWithMetadata[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
@@ -74,13 +96,13 @@ export async function getVersionsBatch(
   let query = [
     options.force ? 'force=true' : '',
     options.loose ? 'loose=true' : '',
+    options.metadata ? 'metadata=true' : '',
   ].filter(Boolean).join('&')
   if (query)
     query = `?${query}`
 
   const data = await fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
     .then(r => r.json()) as PackageVersionsInfo | PackageVersionsInfo[]
-
   if (!Array.isArray(data))
     return [data]
   return data
@@ -88,8 +110,16 @@ export async function getVersionsBatch(
 
 export async function getVersions(
   name: string,
-  options: GetVersionsOptions = {},
-): Promise<PackageVersionsInfo> {
-  const [data] = await getVersionsBatch([name], options)
+  options?: GetVersionsOptions<false>,
+): Promise<PackageVersionsInfo>
+export async function getVersions(
+  name: string,
+  options: GetVersionsOptions<true>,
+): Promise<PackageVersionsInfoWithMetadata>
+export async function getVersions(
+  name: string,
+  options: GetVersionsOptions<boolean> = {},
+): Promise<PackageVersionsInfo | PackageVersionsInfoWithMetadata> {
+  const [data] = await getVersionsBatch([name], options as GetVersionsOptions<true>)
   return data
 }

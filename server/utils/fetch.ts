@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
 import { joinURL } from 'ufo'
 import { $fetch } from 'ofetch'
-import type { PackageManifest, PackageManifestError } from '../../shared/types'
+import type { PackageManifest, PackageManifestError, PackageVersionMeta } from '../../shared/types'
 
 const DOC_ABBREVIATED = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
 const DOC_FULL = 'application/json'
 const REGISTRY = 'https://registry.npmjs.org/'
 const USER_AGENT = `get-npm-meta`
+const STORAGE_KEY = 'manifest-v2'
 
 const promiseCache = new Map<string, ReturnType<typeof _fetchPackageManifest>>()
 
@@ -24,11 +25,27 @@ async function _fetchPackageManifest(name: string, registry: string, userAgent: 
     },
   }) as unknown as Packument
 
+  function createPackageVersionMeta(version: string, data: Omit<Packument, 'versions'>): PackageVersionMeta {
+    const meta: PackageVersionMeta = {
+      time: packument.time[version],
+    }
+    if (data.engines)
+      meta.engines = data.engines
+    if (data.deprecated)
+      meta.deprecated = data.deprecated
+    return meta
+  }
+
   return {
     name: packument.name,
     distTags: packument['dist-tags'],
-    versions: Object.keys(packument.versions),
-    time: packument.time,
+    versionsMeta: Object.fromEntries(
+      Object.entries(packument.versions).map(([version, data]) => {
+        return [version, createPackageVersionMeta(version, data)] satisfies [string, PackageVersionMeta]
+      }),
+    ),
+    timeCreated: packument.time.created,
+    timeModified: packument.time.modified,
     lastSynced: Date.now(),
   }
 }
@@ -43,7 +60,7 @@ export async function fetchPackageManifest(name: string, force = false) {
   }
 
   const config = useRuntimeConfig()
-  const storage = useStorage<PackageManifest | PackageManifestError>('manifest')
+  const storage = useStorage<PackageManifest | PackageManifestError>(STORAGE_KEY)
   const storedData = await storage.getItem(name)
 
   if (storedData) {
@@ -88,6 +105,11 @@ export async function fetchPackageManifest(name: string, force = false) {
 export interface Packument {
   'name': string
   /**
+   * An object where each key is a version, and each value is the engines for
+   * that version.
+   */
+  'engines': Record<string, string>
+  /**
    * An object where each key is a version, and each value is the manifest for
    * that version.
    */
@@ -97,6 +119,10 @@ export interface Packument {
    * gets turned into `foo@1.2.3`.
    */
   'dist-tags': { latest: string } & Record<string, string>
+  /**
+   * Deprecated message for the package.
+   */
+  'deprecated'?: string
   /**
    * In the full packument, an object mapping version numbers to publication
    * times, for the `opts.before` functionality.
