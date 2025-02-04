@@ -1,4 +1,5 @@
 import { x } from 'tinyexec'
+import waitPort from 'wait-port'
 
 export default async function setup() {
   const PORT = 12452
@@ -11,7 +12,7 @@ export default async function setup() {
     },
   })
 
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  await waitPort({ port: PORT })
 
   return () => {
     process.kill()
