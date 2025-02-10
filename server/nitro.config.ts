@@ -12,6 +12,11 @@ export default defineNitroConfig({
       max: 10_000,
     },
   },
+  routeRules: {
+    '**': {
+      cors: true,
+    },
+  },
   runtimeConfig: {
     app: {
       repoUrl,
