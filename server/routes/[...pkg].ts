@@ -35,6 +35,10 @@ export default eventHandler(async (event) => {
           }
         })
       }
+      else if (spec.type === 'version') {
+        version = spec.fetchSpec
+        specifier = spec.fetchSpec
+      }
       else {
         throw new Error(`Unsupported spec: ${JSON.stringify(spec)}`)
       }
