@@ -88,6 +88,7 @@ export async function fetchPackageManifest(name: string, force = false) {
     })
     .catch(async (e) => {
       const data: PackageManifestError = {
+        name,
         error: e.message,
         lastSynced: Date.now(),
       }

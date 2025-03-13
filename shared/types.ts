@@ -30,8 +30,12 @@ export interface PackageVersionsInfoWithMetadata extends PackageManifest {
   specifier: string
 }
 
-export interface PackageManifestError {
+export interface PackageError {
+  name: string
   error: string
+}
+
+export interface PackageManifestError extends PackageError {
   lastSynced: number
 }
 
