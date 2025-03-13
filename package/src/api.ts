@@ -1,4 +1,4 @@
-import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata, ResolvedPackageVersion } from '../../shared/types'
+import type { MaybeError, PackageVersionsInfo, PackageVersionsInfoWithMetadata, ResolvedPackageVersion } from '../../shared/types'
 
 export interface FetchOptions {
   apiEndpoint?: string
@@ -47,7 +47,7 @@ export const defaultOptions = {
 export async function getLatestVersionBatch(
   packages: string[],
   options: GetLatestVersionOptions = {},
-): Promise<ResolvedPackageVersion[]> {
+): Promise<MaybeError<ResolvedPackageVersion>[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
@@ -61,7 +61,7 @@ export async function getLatestVersionBatch(
     query = `?${query}`
 
   const data = await fetchApi(new URL(packages.join('+') + query, apiEndpoint))
-    .then(r => r.json()) as ResolvedPackageVersion | ResolvedPackageVersion[]
+    .then(r => r.json()) as MaybeError<ResolvedPackageVersion> | MaybeError<ResolvedPackageVersion>[]
 
   if (!Array.isArray(data))
     return [data]
@@ -71,7 +71,7 @@ export async function getLatestVersionBatch(
 export async function getLatestVersion(
   name: string,
   options: GetLatestVersionOptions = {},
-): Promise<ResolvedPackageVersion> {
+): Promise<MaybeError<ResolvedPackageVersion>> {
   const [data] = await getLatestVersionBatch([name], options)
   return data
 }
@@ -79,15 +79,15 @@ export async function getLatestVersion(
 export async function getVersionsBatch(
   packages: string[],
   options?: GetVersionsOptions<false>,
-): Promise<PackageVersionsInfo[]>
+): Promise<MaybeError<PackageVersionsInfo>[]>
 export async function getVersionsBatch(
   packages: string[],
   options: GetVersionsOptions<true>,
-): Promise<PackageVersionsInfoWithMetadata[]>
+): Promise<MaybeError<PackageVersionsInfoWithMetadata>[]>
 export async function getVersionsBatch(
   packages: string[],
   options: GetVersionsOptions<boolean> = {},
-): Promise<PackageVersionsInfo[] | PackageVersionsInfoWithMetadata[]> {
+): Promise<MaybeError<PackageVersionsInfo>[] | MaybeError<PackageVersionsInfoWithMetadata>[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
@@ -102,7 +102,7 @@ export async function getVersionsBatch(
     query = `?${query}`
 
   const data = await fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
-    .then(r => r.json()) as PackageVersionsInfo | PackageVersionsInfo[]
+    .then(r => r.json()) as MaybeError<PackageVersionsInfo> | MaybeError<PackageVersionsInfo>[]
   if (!Array.isArray(data))
     return [data]
   return data
@@ -111,15 +111,15 @@ export async function getVersionsBatch(
 export async function getVersions(
   name: string,
   options?: GetVersionsOptions<false>,
-): Promise<PackageVersionsInfo>
+): Promise<MaybeError<PackageVersionsInfo>>
 export async function getVersions(
   name: string,
   options: GetVersionsOptions<true>,
-): Promise<PackageVersionsInfoWithMetadata>
+): Promise<MaybeError<PackageVersionsInfoWithMetadata>>
 export async function getVersions(
   name: string,
   options: GetVersionsOptions<boolean> = {},
-): Promise<PackageVersionsInfo | PackageVersionsInfoWithMetadata> {
+): Promise<MaybeError<PackageVersionsInfo> | MaybeError<PackageVersionsInfoWithMetadata>> {
   const [data] = await getVersionsBatch([name], options as GetVersionsOptions<true>)
   return data
 }

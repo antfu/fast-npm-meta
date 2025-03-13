@@ -1,5 +1,4 @@
 import semver from 'semver'
-import type { H3Error } from 'h3'
 import { fetchPackageManifest } from '../../utils/fetch'
 import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata } from '../../../shared/types'
 import { handlePackagesQuery } from '../../utils/handle'
@@ -7,7 +6,7 @@ import { handlePackagesQuery } from '../../utils/handle'
 export default eventHandler(async (event) => {
   const query = getQuery(event)
 
-  return handlePackagesQuery<PackageVersionsInfoWithMetadata | PackageVersionsInfo | H3Error>(
+  return handlePackagesQuery<PackageVersionsInfoWithMetadata | PackageVersionsInfo>(
     event,
     async (spec) => {
       const manifest = await fetchPackageManifest(spec.name, !!query.force)

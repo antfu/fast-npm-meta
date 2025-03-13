@@ -35,6 +35,8 @@ export interface PackageError {
   error: string
 }
 
+export type MaybeError<T> = T | PackageError
+
 export interface PackageManifestError extends PackageError {
   lastSynced: number
 }

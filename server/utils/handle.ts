@@ -1,19 +1,19 @@
 import type { EventHandlerRequest, H3Event } from 'h3'
 import type { Result as ParsedSpec } from 'npm-package-arg'
 import parsePackage from 'npm-package-arg'
-import type { PackageError } from '../../shared/types'
+import type { MaybeError } from '../../shared/types'
 
 export async function handlePackagesQuery<T>(
   event: H3Event<EventHandlerRequest>,
   handler: (spec: ParsedSpec) => Promise<T>,
-): Promise<T | PackageError | (T | PackageError)[]> {
+): Promise<MaybeError<T> | MaybeError<T>[]> {
   const raw = decodeURIComponent(event.context.params.pkg)
 
   const specs = raw.split('+').filter(Boolean)
 
   // Record the spec index to keep the result order consistent.
   const validSpecs: [idx: number, ParsedSpec][] = []
-  const results = Array.from<T | PackageError>({ length: specs.length })
+  const results = Array.from<MaybeError<T>>({ length: specs.length })
 
   for (const [idx, spec] of specs.entries()) {
     let parsedSpec: ParsedSpec
