@@ -19,6 +19,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./registry": {
+      "types": "./dist/registry.d.ts",
+      "import": "./dist/registry.mjs",
+      "require": "./dist/registry.cjs"
     }
   },
   "main": "./dist/index.mjs",
