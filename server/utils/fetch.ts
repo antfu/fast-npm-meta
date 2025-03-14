@@ -40,6 +40,9 @@ export async function fetchPackageManifest(name: string, force = false) {
 
   const registryUrl = config.app.registryUrl || REGISTRY
   const registryUserAgent = config.app.registryUserAgent || USER_AGENT
+
+  // eslint-disable-next-line no-console
+  console.log(`Fetching package "${name}" from "${registryUrl}"`)
   const promise = _fetchPackageManifest(name, {
     registry: registryUrl,
     fullManifest: FullManifest,
@@ -55,7 +58,7 @@ export async function fetchPackageManifest(name: string, force = false) {
         lastSynced: Date.now(),
       }
       await storage.setItem(name, data)
-      throw e.message
+      throw e
     })
     .finally(() => {
       promiseCache.delete(name)

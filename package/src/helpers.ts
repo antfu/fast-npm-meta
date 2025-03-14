@@ -57,7 +57,12 @@ export async function fetchPackageManifest(
     headers.set('user-agent', options.userAgent)
   }
 
-  const packument = await fetch(url, { headers }).then(r => r.json()) as Packument
+  const resp = await fetch(url, { headers })
+  if (!resp.ok) {
+    throw new Error(`[GET] "${url}": ${resp.status} ${resp.statusText}`)
+  }
+
+  const packument = await resp.json() as Packument
 
   function createPackageVersionMeta(version: string, data: Omit<Packument, 'versions'>): PackageVersionMeta {
     const meta: PackageVersionMeta = {
