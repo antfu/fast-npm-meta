@@ -6,6 +6,12 @@ export interface FetchOptions {
    * Fetch function
    */
   fetch?: typeof fetch
+  /**
+   * Should throw error or return error object
+   *
+   * @default false
+   */
+  throw?: boolean
 }
 
 export interface GetVersionsOptions<WithMetadata extends boolean> extends FetchOptions {
@@ -41,7 +47,6 @@ export const defaultOptions = {
    * @default 'https://npm.antfu.dev/'
    */
   apiEndpoint: 'https://npm.antfu.dev/',
-
 } satisfies FetchOptions
 
 export async function getLatestVersionBatch(
@@ -51,11 +56,13 @@ export async function getLatestVersionBatch(
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
+    throw: throwError = false,
   } = options
 
   let query = [
     options.force ? 'force=true' : '',
     options.metadata ? 'metadata=true' : '',
+    throwError ? '' : 'throw=false',
   ].filter(Boolean).join('&')
   if (query)
     query = `?${query}`
@@ -63,9 +70,10 @@ export async function getLatestVersionBatch(
   const data = await fetchApi(new URL(packages.join('+') + query, apiEndpoint))
     .then(r => r.json()) as MaybeError<ResolvedPackageVersion> | MaybeError<ResolvedPackageVersion>[]
 
-  if (!Array.isArray(data))
-    return [data]
-  return data
+  const list = toArray(data)
+  return throwError
+    ? throwErrorObject(list)
+    : list
 }
 
 export async function getLatestVersion(
@@ -91,21 +99,25 @@ export async function getVersionsBatch(
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
+    throw: throwError = false,
   } = options
 
   let query = [
     options.force ? 'force=true' : '',
     options.loose ? 'loose=true' : '',
     options.metadata ? 'metadata=true' : '',
+    throwError ? '' : 'throw=false',
   ].filter(Boolean).join('&')
   if (query)
     query = `?${query}`
 
   const data = await fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
     .then(r => r.json()) as MaybeError<PackageVersionsInfo> | MaybeError<PackageVersionsInfo>[]
-  if (!Array.isArray(data))
-    return [data]
-  return data
+
+  const list = toArray(data)
+  return throwError
+    ? throwErrorObject(list)
+    : list
 }
 
 export async function getVersions(
@@ -122,4 +134,16 @@ export async function getVersions(
 ): Promise<MaybeError<PackageVersionsInfo> | MaybeError<PackageVersionsInfoWithMetadata>> {
   const [data] = await getVersionsBatch([name], options as GetVersionsOptions<true>)
   return data
+}
+
+function throwErrorObject<T extends object>(data: MaybeError<T>): T {
+  if (data && 'error' in data)
+    throw new Error(data.error)
+  return data
+}
+
+function toArray<T>(data: T | T[]): T[] {
+  if (Array.isArray(data))
+    return data
+  return [data]
 }

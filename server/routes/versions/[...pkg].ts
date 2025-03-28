@@ -4,11 +4,9 @@ import { fetchPackageManifest } from '../../utils/fetch'
 import { handlePackagesQuery } from '../../utils/handle'
 
 export default eventHandler(async (event) => {
-  const query = getQuery(event)
-
   return handlePackagesQuery<PackageVersionsInfoWithMetadata | PackageVersionsInfo>(
     event,
-    async (spec) => {
+    async (spec, query) => {
       const manifest = await fetchPackageManifest(spec.name, !!query.force)
       let versions: string[] = Object.keys(manifest.versionsMeta)
 

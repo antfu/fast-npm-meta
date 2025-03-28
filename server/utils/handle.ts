@@ -1,12 +1,18 @@
-import type { EventHandlerRequest, H3Event } from 'h3'
+import type { EventHandlerRequest, H3Error, H3Event } from 'h3'
 import type { Result as ParsedSpec } from 'npm-package-arg'
+import type { QueryObject } from 'ufo'
 import type { MaybeError } from '../../shared/types'
+import { createError, getQuery } from 'h3'
 import parsePackage from 'npm-package-arg'
 
-export async function handlePackagesQuery<T>(
+export async function handlePackagesQuery<T extends object>(
   event: H3Event<EventHandlerRequest>,
-  handler: (spec: ParsedSpec) => Promise<T>,
-): Promise<MaybeError<T> | MaybeError<T>[]> {
+  handler: (spec: ParsedSpec, query: QueryObject) => Promise<T>,
+): Promise<MaybeError<T> | MaybeError<T>[] | H3Error> {
+  const query = getQuery(event)
+
+  const throwError = !(query.throw === 'false' || query.throw === false)
+
   const raw = decodeURIComponent(event.context.params.pkg)
 
   const specs = raw.split('+').filter(Boolean)
@@ -22,12 +28,26 @@ export async function handlePackagesQuery<T>(
       parsedSpec = parsePackage(spec)
     }
     catch (error) {
-      results[idx] = { name: spec, error: retrieveErrorMessage(error) }
+      const result = { name: spec, error: retrieveErrorMessage(error) }
+      if (throwError) {
+        return createError({
+          status: 400,
+          message: result.error,
+        })
+      }
+      results[idx] = result
       continue
     }
 
     if (!parsedSpec.name) {
-      results[idx] = { name: spec, error: `Invalid package specifier: ${spec}` }
+      const result = { name: spec, error: `Invalid package specifier: ${spec}` }
+      if (throwError) {
+        return createError({
+          status: 400,
+          message: result.error,
+        })
+      }
+      results[idx] = result
       continue
     }
 
@@ -35,14 +55,29 @@ export async function handlePackagesQuery<T>(
   }
 
   if (validSpecs.length) {
-    await Promise.allSettled(validSpecs.map(async ([idx, parsedSpec]) => {
-      await handler(parsedSpec)
-        .then(result => results[idx] = result)
-        .catch(error => results[idx] = {
-          name: parsedSpec.raw,
-          error: retrieveErrorMessage(error),
+    await Promise.allSettled(validSpecs.map(async ([idx, parsedSpec]) =>
+      handler(parsedSpec, query)
+        .then((result) => {
+          results[idx] = result
         })
-    }))
+        .catch((error) => {
+          results[idx] = {
+            name: parsedSpec.raw,
+            error: retrieveErrorMessage(error),
+          }
+        }),
+    ))
+  }
+
+  if (throwError) {
+    for (const result of results) {
+      if (result && 'error' in result) {
+        return createError({
+          status: 400,
+          message: result.error,
+        })
+      }
+    }
   }
 
   return results.length === 1 ? results[0] : results
