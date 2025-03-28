@@ -6,17 +6,20 @@ const revision = execSync('git rev-parse HEAD').toString().trim()
 // https://nitro.unjs.io/config
 export default defineNitroConfig({
   preset: 'netlify_edge',
+
   storage: {
     manifest: {
       driver: 'lruCache', // Switch to `redis`?
       max: 10_000,
     },
   },
+
   routeRules: {
     '**': {
       cors: true,
     },
   },
+
   runtimeConfig: {
     app: {
       repoUrl,
@@ -28,4 +31,6 @@ export default defineNitroConfig({
       registryUserAgent: '',
     },
   },
+
+  compatibilityDate: '2025-03-28',
 })

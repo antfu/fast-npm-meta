@@ -1,6 +1,6 @@
+import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata } from '../../../shared/types'
 import semver from 'semver'
 import { fetchPackageManifest } from '../../utils/fetch'
-import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata } from '../../../shared/types'
 import { handlePackagesQuery } from '../../utils/handle'
 
 export default eventHandler(async (event) => {

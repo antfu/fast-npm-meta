@@ -1,7 +1,7 @@
 import type { EventHandlerRequest, H3Event } from 'h3'
 import type { Result as ParsedSpec } from 'npm-package-arg'
-import parsePackage from 'npm-package-arg'
 import type { MaybeError } from '../../shared/types'
+import parsePackage from 'npm-package-arg'
 
 export async function handlePackagesQuery<T>(
   event: H3Event<EventHandlerRequest>,

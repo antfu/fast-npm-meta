@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import { joinURL } from 'ufo'
-import { $fetch } from 'ofetch'
 import type { PackageManifest, PackageManifestError, PackageVersionMeta } from '../../shared/types'
+import { $fetch } from 'ofetch'
+import { joinURL } from 'ufo'
 
 const DOC_ABBREVIATED = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
 const DOC_FULL = 'application/json'
