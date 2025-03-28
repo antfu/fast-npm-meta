@@ -267,6 +267,8 @@ It will return `200` with:
 ]
 ```
 
+In the JavaScript API, you can pass `throw: false` in the option.
+
 ## JavaScript API
 
 You can also use the JavaScript API to resolve the versions.
