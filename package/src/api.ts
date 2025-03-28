@@ -136,9 +136,11 @@ export async function getVersions(
   return data
 }
 
-function throwErrorObject<T extends object>(data: MaybeError<T>): T {
-  if (data && 'error' in data)
-    throw new Error(data.error)
+function throwErrorObject<T extends object>(data: MaybeError<T> | any): T {
+  for (const item of toArray(data)) {
+    if (item && 'error' in item)
+      throw new Error(item.message || item.error)
+  }
   return data
 }
 

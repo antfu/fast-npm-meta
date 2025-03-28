@@ -79,18 +79,24 @@ it.concurrent('latest', async () => {
 })
 
 it.concurrent('versions', async () => {
-  expect(await getVersions('vite', { apiEndpoint }))
+  await expect(getVersions('vite', { apiEndpoint }))
+    .resolves
     .toMatchObject({
       name: 'vite',
       versions: expect.arrayContaining(['3.0.0']),
       lastSynced: expect.any(Number),
     })
 
-  expect(await getVersions('some-private-package', { apiEndpoint }))
+  await expect(getVersions('some-private-package', { apiEndpoint }))
+    .resolves
     .toMatchObject({
       name: 'some-private-package',
       error: '[GET] "https://registry.npmjs.org/some-private-package": 404 Not Found',
     })
+
+  await expect(() => getVersions('some-private-package', { throw: true, apiEndpoint }))
+    .rejects
+    .toThrowErrorMatchingInlineSnapshot(`[Error: [GET] "https://registry.npmjs.org/some-private-package": 404 Not Found]`)
 
   expect(await getVersions('are-we-there-yet', { apiEndpoint, metadata: true }))
     .toMatchObject({
