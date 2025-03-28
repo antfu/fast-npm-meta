@@ -4,11 +4,9 @@ import { fetchPackageManifest } from '../utils/fetch'
 import { handlePackagesQuery } from '../utils/handle'
 
 export default eventHandler(async (event) => {
-  const query = getQuery(event)
-
   return handlePackagesQuery<ResolvedPackageVersion>(
     event,
-    async (spec) => {
+    async (spec, query) => {
       const data = await fetchPackageManifest(spec.name, !!query.force)
 
       let version: string | null = null

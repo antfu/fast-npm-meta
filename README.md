@@ -239,6 +239,36 @@ curl https://npm.antfu.dev/versions/vite?metadata=true
 }
 ```
 
+## Error Handling
+
+By default, the endpoint will return `400` or `500` status codes for errors.
+
+If you want to handle the errors in the payload, or retriving partial query result, set `?throw=false` in the query string.
+
+```sh
+curl https://npm.antfu.dev/vite+non-exist?throw=false
+```
+
+It will return `200` with:
+
+```json
+[
+  {
+    "name": "vite",
+    "specifier": "latest",
+    "version": "6.2.3",
+    "publishedAt": "2025-03-24T09:51:35.322Z",
+    "lastSynced": 1743129342678
+  },
+  {
+    "name": "non-exist",
+    "error": "[GET] \"https://registry.npmjs.org/non-exist\": 404 Not Found"
+  }
+]
+```
+
+In the JavaScript API, you can pass `throw: false` in the option.
+
 ## JavaScript API
 
 You can also use the JavaScript API to resolve the versions.
@@ -263,7 +293,7 @@ The tool does not require any preliminary configuration to work, but you can ove
 |-----------------------|----------------------------------|----------------------------------------|
 | `PORT`                | Port to listen on                | `3000`                                 |
 | `HOST`                | Host to serve                    |                                        |
-| `REPO_URL`            | Code reposotory URL              | https://github.com/antfu/fast-npm-meta |
+| `REPO_URL`            | Code repository URL              | https://github.com/antfu/fast-npm-meta |
 | `CACHE_TIMEOUT`       | Cache timeout in ms              | `900000` (15m)                         |
 | `CACHE_TIMEOUT_FORCE` | Cache timeout for forced updates | `30000` (30s)                          |
 | `REGISTRY_URL`        | NPM registry URL                 | https://registry.npmjs.org             |
