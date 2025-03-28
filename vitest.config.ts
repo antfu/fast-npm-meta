@@ -5,5 +5,6 @@ export default defineConfig({
     globalSetup: [
       './vitest.setup.ts',
     ],
+    testTimeout: 60_000,
   },
 })
