@@ -1,6 +1,6 @@
+import type { ResolvedPackageVersion } from '../../shared/types'
 import semver from 'semver'
 import { fetchPackageManifest } from '../utils/fetch'
-import type { ResolvedPackageVersion } from '../../shared/types'
 import { handlePackagesQuery } from '../utils/handle'
 
 export default eventHandler(async (event) => {

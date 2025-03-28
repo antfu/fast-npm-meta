@@ -1,7 +1,7 @@
-import semver from 'semver'
 import type { H3Error } from 'h3'
-import { fetchPackageManifest } from '../../utils/fetch'
 import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata } from '../../../shared/types'
+import semver from 'semver'
+import { fetchPackageManifest } from '../../utils/fetch'
 import { handlePackagesQuery } from '../../utils/handle'
 
 export default eventHandler(async (event) => {

@@ -4,96 +4,163 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  dev:
+    '@antfu/eslint-config':
+      specifier: ^4.11.0
+      version: 4.11.0
+    '@antfu/ni':
+      specifier: ^24.3.0
+      version: 24.3.0
+    bumpp:
+      specifier: ^10.1.0
+      version: 10.1.0
+    eslint:
+      specifier: ^9.23.0
+      version: 9.23.0
+    lint-staged:
+      specifier: ^15.5.0
+      version: 15.5.0
+    simple-git-hooks:
+      specifier: ^2.12.1
+      version: 2.12.1
+    tinyexec:
+      specifier: ^1.0.1
+      version: 1.0.1
+    tsx:
+      specifier: ^4.19.3
+      version: 4.19.3
+    typescript:
+      specifier: ^5.8.2
+      version: 5.8.2
+    unbuild:
+      specifier: ^3.5.0
+      version: 3.5.0
+    vite:
+      specifier: ^6.2.3
+      version: 6.2.3
+    vitest:
+      specifier: ^3.0.9
+      version: 3.0.9
+    wait-port:
+      specifier: ^1.1.0
+      version: 1.1.0
+    zx:
+      specifier: ^8.4.1
+      version: 8.4.1
+  server:
+    h3:
+      specifier: ^1.15.1
+      version: 1.15.1
+    lru-cache:
+      specifier: ^11.1.0
+      version: 11.1.0
+    nitropack:
+      specifier: ^2.11.8
+      version: 2.11.8
+    npm-package-arg:
+      specifier: ^12.0.2
+      version: 12.0.2
+    ofetch:
+      specifier: ^1.4.1
+      version: 1.4.1
+    semver:
+      specifier: ^7.7.1
+      version: 7.7.1
+    ufo:
+      specifier: ^1.5.4
+      version: 1.5.4
+  types:
+    '@types/node':
+      specifier: ^22.13.14
+      version: 22.13.14
+    '@types/npm-package-arg':
+      specifier: ^6.1.4
+      version: 6.1.4
+    '@types/semver':
+      specifier: ^7.7.0
+      version: 7.7.0
+
 importers:
 
   .:
     devDependencies:
       '@antfu/eslint-config':
-        specifier: ^4.11.0
+        specifier: catalog:dev
         version: 4.11.0(@typescript-eslint/utils@8.28.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(@vue/compiler-sfc@3.4.31)(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)(vitest@3.0.9(@types/debug@4.1.12)(@types/node@22.13.14)(jiti@2.4.2)(terser@5.31.1)(tsx@4.19.3)(yaml@2.7.0))
       '@antfu/ni':
-        specifier: ^24.3.0
+        specifier: catalog:dev
         version: 24.3.0
-      '@antfu/utils':
-        specifier: ^9.1.0
-        version: 9.1.0
       '@types/node':
-        specifier: ^22.13.14
+        specifier: catalog:types
         version: 22.13.14
       bumpp:
-        specifier: ^10.1.0
+        specifier: catalog:dev
         version: 10.1.0(magicast@0.3.5)
       eslint:
-        specifier: ^9.23.0
+        specifier: catalog:dev
         version: 9.23.0(jiti@2.4.2)
-      esno:
-        specifier: ^4.8.0
-        version: 4.8.0
       lint-staged:
-        specifier: ^15.5.0
+        specifier: catalog:dev
         version: 15.5.0
-      rimraf:
-        specifier: ^6.0.1
-        version: 6.0.1
       simple-git-hooks:
-        specifier: ^2.12.1
+        specifier: catalog:dev
         version: 2.12.1
       tinyexec:
-        specifier: ^1.0.1
+        specifier: catalog:dev
         version: 1.0.1
       tsx:
-        specifier: ^4.19.3
+        specifier: catalog:dev
         version: 4.19.3
       typescript:
-        specifier: ^5.8.2
+        specifier: catalog:dev
         version: 5.8.2
       unbuild:
-        specifier: ^3.5.0
+        specifier: catalog:dev
         version: 3.5.0(typescript@5.8.2)
       vite:
-        specifier: ^6.2.3
+        specifier: catalog:dev
         version: 6.2.3(@types/node@22.13.14)(jiti@2.4.2)(terser@5.31.1)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: ^3.0.9
+        specifier: catalog:dev
         version: 3.0.9(@types/debug@4.1.12)(@types/node@22.13.14)(jiti@2.4.2)(terser@5.31.1)(tsx@4.19.3)(yaml@2.7.0)
       wait-port:
-        specifier: ^1.1.0
+        specifier: catalog:dev
         version: 1.1.0
       zx:
-        specifier: ^8.4.1
+        specifier: catalog:dev
         version: 8.4.1
 
   package: {}
 
   server:
-    dependencies:
-      h3:
-        specifier: ^1.15.1
-        version: 1.15.1
     devDependencies:
       '@types/npm-package-arg':
-        specifier: ^6.1.4
+        specifier: catalog:types
         version: 6.1.4
       '@types/semver':
-        specifier: ^7.7.0
+        specifier: catalog:types
         version: 7.7.0
+      h3:
+        specifier: catalog:server
+        version: 1.15.1
       lru-cache:
-        specifier: ^11.1.0
+        specifier: catalog:server
         version: 11.1.0
       nitropack:
-        specifier: ^2.11.8
+        specifier: catalog:server
         version: 2.11.8
       npm-package-arg:
-        specifier: ^12.0.2
+        specifier: catalog:server
         version: 12.0.2
       ofetch:
-        specifier: ^1.4.1
+        specifier: catalog:server
         version: 1.4.1
       semver:
-        specifier: ^7.7.1
+        specifier: catalog:server
         version: 7.7.1
       ufo:
-        specifier: ^1.5.4
+        specifier: catalog:server
         version: 1.5.4
 
 packages:
@@ -153,9 +220,6 @@ packages:
   '@antfu/ni@24.3.0':
     resolution: {integrity: sha512-wBSav4mBxvHEW9RbdSo1SWLQ6MAlT0Dc423weC58yOWqW4OcMvtnNDdDrxOZeJ88fEIyPK93gDUWIelBxzSf8g==}
     hasBin: true
-
-  '@antfu/utils@9.1.0':
-    resolution: {integrity: sha512-R+3bzxNN0ZscQg3ZVG7suqBTFP2dbdaCjKe5KY6hqNZimdyZ32KemotJPmoqQhKH28CqdgyXQGkWZlCGsGQmJw==}
 
   '@babel/code-frame@7.26.2':
     resolution: {integrity: sha512-RJlIHRueQgwWitWgF8OdFYGZX328Ax5BCemNGlqHfplnRT9ESi8JkFlvaVYbS+UubVY6dpv87Fs2u5M29iNFVQ==}
@@ -1907,10 +1971,6 @@ packages:
       jiti:
         optional: true
 
-  esno@4.8.0:
-    resolution: {integrity: sha512-acMtooReAQGzLU0zcuEDHa8S62meh5aIyi8jboYxyvAePdmuWx2Mpwmt0xjwO0bs9/SXf+dvXJ0QJoDWw814Iw==}
-    hasBin: true
-
   espree@10.3.0:
     resolution: {integrity: sha512-0QYC8b24HWY8zjRnDTL6RiHfDbAWn63qb4LMj1Z4b076A4une81+z03Kg7l7mn/48PUTqoLptSXez8oknU8Clg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -2077,11 +2137,6 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
-    hasBin: true
-
-  glob@11.0.1:
-    resolution: {integrity: sha512-zrQDm8XPnYEKawJScsnM0QzobJxlT/kHOOlRTio8IH/GrmxRE5fjllkzdaHclIuNjUQTJYH2xHNIGfdpJkDJUw==}
-    engines: {node: 20 || >=22}
     hasBin: true
 
   globals@14.0.0:
@@ -2274,10 +2329,6 @@ packages:
   jackspeak@3.4.0:
     resolution: {integrity: sha512-JVYhQnN59LVPFCEcVa2C3CrEKYacvjRfqIQl+h8oi91aLYQVWRYbxjPcv1bUiUy/kLmQaANrYfNMCO3kuEDHfw==}
     engines: {node: '>=14'}
-
-  jackspeak@4.1.0:
-    resolution: {integrity: sha512-9DDdhb5j6cpeitCbvLO7n7J4IxnbM6hoF6O1g4HQ5TfhvvKN8ywDM7668ZhMHRqVmxqhps/F6syWK2KcPxYlkw==}
-    engines: {node: 20 || >=22}
 
   jiti@1.21.7:
     resolution: {integrity: sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==}
@@ -2801,10 +2852,6 @@ packages:
     resolution: {integrity: sha512-Xa4Nw17FS9ApQFJ9umLiJS4orGjm7ZzwUrwamcGQuHSzDyth9boKDaycYdDcZDuqYATXw4HFXgaqWTctW/v1HA==}
     engines: {node: '>=16 || 14 >=14.18'}
 
-  path-scurry@2.0.0:
-    resolution: {integrity: sha512-ypGJsmGtdXUOeM5u93TyeIEfEhM6s+ljAhrk5vAvSx8uyY/02OvrZnA0YNGUrPXfpJMgI1ODd3nwz8Npx4O4cg==}
-    engines: {node: 20 || >=22}
-
   path-type@6.0.0:
     resolution: {integrity: sha512-Vj7sf++t5pBD637NSfkxpHSMfWaeig5+DKWLhcqIYx6mWQz5hdJTGDVMQiJcw1ZYkhs7AazKDGpRVji1LJCZUQ==}
     engines: {node: '>=18'}
@@ -3162,11 +3209,6 @@ packages:
   rimraf@5.0.9:
     resolution: {integrity: sha512-3i7b8OcswU6CpU8Ej89quJD4O98id7TtVM5U4Mybh84zQXdrFmDLouWBEEaD/QfO3gDDfH+AGFCGsR7kngzQnA==}
     engines: {node: 14 >=14.20 || 16 >=16.20 || >=18}
-    hasBin: true
-
-  rimraf@6.0.1:
-    resolution: {integrity: sha512-9dkvaxAsk/xNXSJzMgFqqMCuFgt2+KsOFek3TMLfo8NCPfWpBmqwyNn5Y+NX56QUYfCtsyhF3ayiboEoUmJk/A==}
-    engines: {node: 20 || >=22}
     hasBin: true
 
   rollup-plugin-dts@6.1.1:
@@ -3881,8 +3923,6 @@ snapshots:
       fzf: 0.5.2
       package-manager-detector: 1.1.0
       tinyexec: 1.0.1
-
-  '@antfu/utils@9.1.0': {}
 
   '@babel/code-frame@7.26.2':
     dependencies:
@@ -5573,10 +5613,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  esno@4.8.0:
-    dependencies:
-      tsx: 4.19.3
-
   espree@10.3.0:
     dependencies:
       acorn: 8.14.1
@@ -5738,15 +5774,6 @@ snapshots:
       minipass: 7.1.2
       package-json-from-dist: 1.0.0
       path-scurry: 1.11.1
-
-  glob@11.0.1:
-    dependencies:
-      foreground-child: 3.2.1
-      jackspeak: 4.1.0
-      minimatch: 10.0.1
-      minipass: 7.1.2
-      package-json-from-dist: 1.0.0
-      path-scurry: 2.0.0
 
   globals@14.0.0: {}
 
@@ -5922,10 +5949,6 @@ snapshots:
       '@isaacs/cliui': 8.0.2
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
-
-  jackspeak@4.1.0:
-    dependencies:
-      '@isaacs/cliui': 8.0.2
 
   jiti@1.21.7: {}
 
@@ -6690,11 +6713,6 @@ snapshots:
       lru-cache: 10.4.3
       minipass: 7.1.2
 
-  path-scurry@2.0.0:
-    dependencies:
-      lru-cache: 11.1.0
-      minipass: 7.1.2
-
   path-type@6.0.0: {}
 
   pathe@1.1.2: {}
@@ -7023,11 +7041,6 @@ snapshots:
   rimraf@5.0.9:
     dependencies:
       glob: 10.4.5
-
-  rimraf@6.0.1:
-    dependencies:
-      glob: 11.0.1
-      package-json-from-dist: 1.0.0
 
   rollup-plugin-dts@6.1.1(rollup@4.37.0)(typescript@5.8.2):
     dependencies:
