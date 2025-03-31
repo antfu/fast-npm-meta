@@ -41,10 +41,12 @@ export interface PackageManifestError extends PackageError {
   lastSynced: number
 }
 
-export interface ResolvedPackageVersion extends Partial<PackageVersionMeta> {
+export interface ResolvedPackageVersion {
   name: string
   version: string | null
   specifier: string
   publishedAt: string | null
   lastSynced: number
 }
+
+export interface ResolvedPackageVersionWithMetadata extends ResolvedPackageVersion, PackageVersionMeta {}

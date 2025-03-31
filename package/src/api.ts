@@ -1,44 +1,79 @@
-import type { MaybeError, PackageVersionsInfo, PackageVersionsInfoWithMetadata, ResolvedPackageVersion } from '../../shared/types'
+import type { MaybeError, PackageVersionsInfo, PackageVersionsInfoWithMetadata, ResolvedPackageVersion, ResolvedPackageVersionWithMetadata } from '../../shared/types'
 
-export interface FetchOptions {
+export interface FetchOptions<Throw extends boolean = true> {
+  /**
+   * API endpoint for fetching package versions
+   *
+   * @default 'https://npm.antfu.dev/'
+   */
   apiEndpoint?: string
   /**
    * Fetch function
+   *
+   * @default [globalThis.fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
    */
   fetch?: typeof fetch
   /**
    * Should throw error or return error object
    *
-   * @default false
+   * @default true
    */
-  throw?: boolean
+  throw?: Throw
 }
 
-export interface GetVersionsOptions<WithMetadata extends boolean> extends FetchOptions {
+export interface GetVersionsOptions<
+  Metadata extends boolean = false,
+  Throw extends boolean = true,
+> extends FetchOptions<Throw> {
   /**
    * By pass cache and get the latest data
+   *
+   * @default false
    */
   force?: boolean
   /**
    * Include all versions that are newer than the specified version
+   *
+   * @default false
    */
   loose?: boolean
   /**
    * Includes metadata, this will change the return type
+   *
+   * @default false
    */
-  metadata?: WithMetadata
+  metadata?: Metadata
 }
 
-export interface GetLatestVersionOptions extends FetchOptions {
+export interface GetLatestVersionOptions<
+  Metadata extends boolean = false,
+  Throw extends boolean = true,
+> extends FetchOptions<Throw> {
   /**
    * By pass cache and get the latest data
+   *
+   * @default false
    */
   force?: boolean
   /**
    * Includes metadata
+   *
+   * @default false
    */
-  metadata?: boolean
+  metadata?: Metadata
 }
+
+export type InferGetVersionsResult<Metadata, Throw> = Metadata extends true
+  ? Throw extends true ? PackageVersionsInfoWithMetadata
+    : MaybeError<PackageVersionsInfoWithMetadata>
+  : Throw extends true ? PackageVersionsInfo
+    : MaybeError<PackageVersionsInfo>
+
+export type InferGetLatestVersionResult<Metadata, Throw> = Metadata extends true
+  ? Throw extends true ? ResolvedPackageVersionWithMetadata
+    : MaybeError<ResolvedPackageVersionWithMetadata>
+  : Throw extends true ? ResolvedPackageVersion
+    : MaybeError<ResolvedPackageVersion>
 
 export const defaultOptions = {
   /**
@@ -49,14 +84,17 @@ export const defaultOptions = {
   apiEndpoint: 'https://npm.antfu.dev/',
 } satisfies FetchOptions
 
-export async function getLatestVersionBatch(
+export async function getLatestVersionBatch<
+  Metadata extends boolean = false,
+  Throw extends boolean = true,
+>(
   packages: string[],
-  options: GetLatestVersionOptions = {},
-): Promise<MaybeError<ResolvedPackageVersion>[]> {
+  options: GetLatestVersionOptions<Metadata, Throw> = {},
+): Promise<InferGetLatestVersionResult<Metadata, Throw>[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
-    throw: throwError = false,
+    throw: throwError = true,
   } = options
 
   let query = [
@@ -68,7 +106,7 @@ export async function getLatestVersionBatch(
     query = `?${query}`
 
   const data = await fetchApi(new URL(packages.join('+') + query, apiEndpoint))
-    .then(r => r.json()) as MaybeError<ResolvedPackageVersion> | MaybeError<ResolvedPackageVersion>[]
+    .then(r => r.json()) as InferGetLatestVersionResult<Metadata, Throw> | InferGetLatestVersionResult<Metadata, Throw>[]
 
   const list = toArray(data)
   return throwError
@@ -76,30 +114,28 @@ export async function getLatestVersionBatch(
     : list
 }
 
-export async function getLatestVersion(
+export async function getLatestVersion<
+  Metadata extends boolean = false,
+  Throw extends boolean = true,
+>(
   name: string,
-  options: GetLatestVersionOptions = {},
-): Promise<MaybeError<ResolvedPackageVersion>> {
-  const [data] = await getLatestVersionBatch([name], options)
+  options: GetLatestVersionOptions<Metadata, Throw> = {},
+): Promise<InferGetLatestVersionResult<Metadata, Throw>> {
+  const [data] = await getLatestVersionBatch<Metadata, Throw>([name], options)
   return data
 }
 
-export async function getVersionsBatch(
+export async function getVersionsBatch<
+  Metadata extends boolean = false,
+  Throw extends boolean = true,
+>(
   packages: string[],
-  options?: GetVersionsOptions<false>,
-): Promise<MaybeError<PackageVersionsInfo>[]>
-export async function getVersionsBatch(
-  packages: string[],
-  options: GetVersionsOptions<true>,
-): Promise<MaybeError<PackageVersionsInfoWithMetadata>[]>
-export async function getVersionsBatch(
-  packages: string[],
-  options: GetVersionsOptions<boolean> = {},
-): Promise<MaybeError<PackageVersionsInfo>[] | MaybeError<PackageVersionsInfoWithMetadata>[]> {
+  options: GetVersionsOptions<Metadata, Throw> = {},
+): Promise<InferGetVersionsResult<Metadata, Throw>[]> {
   const {
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
-    throw: throwError = false,
+    throw: throwError = true,
   } = options
 
   let query = [
@@ -112,7 +148,7 @@ export async function getVersionsBatch(
     query = `?${query}`
 
   const data = await fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
-    .then(r => r.json()) as MaybeError<PackageVersionsInfo> | MaybeError<PackageVersionsInfo>[]
+    .then(r => r.json()) as InferGetVersionsResult<Metadata, Throw> | InferGetVersionsResult<Metadata, Throw>[]
 
   const list = toArray(data)
   return throwError
@@ -120,19 +156,14 @@ export async function getVersionsBatch(
     : list
 }
 
-export async function getVersions(
+export async function getVersions<
+  Metadata extends boolean = false,
+  Throw extends boolean = true,
+>(
   name: string,
-  options?: GetVersionsOptions<false>,
-): Promise<MaybeError<PackageVersionsInfo>>
-export async function getVersions(
-  name: string,
-  options: GetVersionsOptions<true>,
-): Promise<MaybeError<PackageVersionsInfoWithMetadata>>
-export async function getVersions(
-  name: string,
-  options: GetVersionsOptions<boolean> = {},
-): Promise<MaybeError<PackageVersionsInfo> | MaybeError<PackageVersionsInfoWithMetadata>> {
-  const [data] = await getVersionsBatch([name], options as GetVersionsOptions<true>)
+  options: GetVersionsOptions<Metadata, Throw> = {},
+): Promise<InferGetVersionsResult<Metadata, Throw>> {
+  const [data] = await getVersionsBatch<Metadata, Throw>([name], options)
   return data
 }
 
