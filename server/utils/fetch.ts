@@ -1,5 +1,6 @@
-import { fetchPackageManifest as _fetchPackageManifest } from '../../package/src/helpers'
+/* eslint-disable no-console */
 import type { PackageManifest, PackageManifestError } from '../../shared/types'
+import { fetchPackageManifest as _fetchPackageManifest } from '../../package/src/helpers'
 
 const REGISTRY = 'https://registry.npmjs.org/'
 const USER_AGENT = `get-npm-meta`
@@ -41,7 +42,6 @@ export async function fetchPackageManifest(name: string, force = false) {
   const registryUrl = config.app.registryUrl || REGISTRY
   const registryUserAgent = config.app.registryUserAgent || USER_AGENT
 
-  // eslint-disable-next-line no-console
   console.log(`Fetching package "${name}" from "${registryUrl}"`)
   const promise = _fetchPackageManifest(name, {
     registry: registryUrl,
@@ -54,6 +54,7 @@ export async function fetchPackageManifest(name: string, force = false) {
     })
     .catch(async (e) => {
       const data: PackageManifestError = {
+        name,
         error: e.message,
         lastSynced: Date.now(),
       }

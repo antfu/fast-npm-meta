@@ -1,14 +1,12 @@
+import type { ResolvedPackageVersion, ResolvedPackageVersionWithMetadata } from '../../shared/types'
 import semver from 'semver'
 import { fetchPackageManifest } from '../utils/fetch'
-import type { ResolvedPackageVersion } from '../../shared/types'
 import { handlePackagesQuery } from '../utils/handle'
 
 export default eventHandler(async (event) => {
-  const query = getQuery(event)
-
-  return handlePackagesQuery<ResolvedPackageVersion>(
+  return handlePackagesQuery<ResolvedPackageVersion | ResolvedPackageVersionWithMetadata>(
     event,
-    async (spec) => {
+    async (spec, query) => {
       const data = await fetchPackageManifest(spec.name, !!query.force)
 
       let version: string | null = null

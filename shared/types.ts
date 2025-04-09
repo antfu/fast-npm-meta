@@ -30,12 +30,18 @@ export interface PackageVersionsInfoWithMetadata extends PackageManifest {
   specifier: string
 }
 
-export interface PackageManifestError {
+export interface PackageError {
+  name: string
   error: string
+}
+
+export type MaybeError<T> = T | PackageError
+
+export interface PackageManifestError extends PackageError {
   lastSynced: number
 }
 
-export interface ResolvedPackageVersion extends Partial<PackageVersionMeta> {
+export interface ResolvedPackageVersion {
   name: string
   version: string | null
   specifier: string
@@ -73,3 +79,5 @@ export interface Packument {
     modified: string
   }
 }
+
+export interface ResolvedPackageVersionWithMetadata extends ResolvedPackageVersion, PackageVersionMeta {}
