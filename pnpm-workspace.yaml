@@ -23,7 +23,6 @@ catalogs:
     lru-cache: ^11.1.0
     nitropack: ^2.11.8
     npm-package-arg: ^12.0.2
-    ofetch: ^1.4.1
     semver: ^7.7.1
     ufo: ^1.6.1
 
