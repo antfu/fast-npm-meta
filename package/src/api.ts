@@ -43,6 +43,12 @@ export interface GetVersionsOptions<
    * @default false
    */
   metadata?: Metadata
+  /**
+   * Only return versions published after this ISO date-time
+   *
+   * @default undefined
+   */
+  after?: string
 }
 
 export interface GetLatestVersionOptions<
@@ -142,6 +148,7 @@ export async function getVersionsBatch<
     options.force ? 'force=true' : '',
     options.loose ? 'loose=true' : '',
     options.metadata ? 'metadata=true' : '',
+    options.after ? `after=${encodeURIComponent(options.after)}` : '',
     throwError ? '' : 'throw=false',
   ].filter(Boolean).join('&')
   if (query)

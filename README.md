@@ -165,6 +165,36 @@ curl https://npm.antfu.dev/versions/vite
 }
 ```
 
+### 📦 Get All Versions Published After a Certain Date
+
+You can pass the `after` query parameter (ISO 8601 date string or timestamp) to only return versions published after a specific point in time.
+
+```sh
+curl "https://npm.antfu.dev/versions/vite?after=2025-01-01T00:00:00Z"
+```
+
+```jsonc
+{
+  "name": "vite",
+  "specifier": "*",
+  "distTags": {
+    "alpha": "6.0.0-alpha.24",
+    "latest": "6.3.0",
+    "previous": "4.5.13",
+    "beta": "6.3.0-beta.2"
+  },
+  "lastSynced": 1744845678674,
+  "versions": [
+    "6.0.7"
+    // ...
+  ],
+  "time": {
+    "6.0.7": "2025-01-02T19:50:46.030Z"
+    // ...
+  }
+}
+```
+
 #### 📦 Get Versions satisfies the Version Range
 
 ```sh
