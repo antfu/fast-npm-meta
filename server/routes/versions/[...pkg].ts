@@ -1,5 +1,6 @@
 import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata } from '../../../shared/types'
 import semver from 'semver'
+import { normalizeQueryDate } from '~/utils/date'
 import { fetchPackageManifest } from '../../utils/fetch'
 import { handlePackagesQuery } from '../../utils/handle'
 
@@ -29,6 +30,16 @@ export default eventHandler(async (event) => {
         const tag = manifest.distTags[spec.fetchSpec]
         if (tag) {
           versions = [tag]
+        }
+      }
+
+      if (query.after) {
+        const afterDate = normalizeQueryDate(query.after)
+        if (afterDate) {
+          versions = versions.filter((v) => {
+            const meta = manifest.versionsMeta[v]
+            return meta.time && new Date(meta.time) > afterDate
+          })
         }
       }
 
