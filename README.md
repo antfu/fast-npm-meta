@@ -165,7 +165,7 @@ curl https://npm.antfu.dev/versions/vite
 }
 ```
 
-### 📦 Get All Versions Published After a Certain Date
+#### 📦 Get All Versions Published After a Certain Date
 
 You can pass the `after` query parameter (ISO 8601 date string or timestamp) to only return versions published after a specific point in time.
 
