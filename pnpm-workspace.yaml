@@ -3,31 +3,33 @@ packages:
   - package
 catalogs:
   dev:
-    '@antfu/eslint-config': ^4.11.0
-    '@antfu/ni': ^24.3.0
-    bumpp: ^10.1.0
-    eslint: ^9.24.0
-    lint-staged: ^15.5.0
-    simple-git-hooks: ^2.12.1
+    '@antfu/eslint-config': ^4.13.2
+    '@antfu/ni': ^24.4.0
+    bumpp: ^10.1.1
+    eslint: ^9.27.0
+    lint-staged: ^16.0.0
+    simple-git-hooks: ^2.13.0
     tinyexec: ^1.0.1
-    tsx: ^4.19.3
+    tsx: ^4.19.4
     typescript: ^5.8.3
     unbuild: ^3.5.0
-    vite: ^6.2.5
-    vitest: ^3.1.1
+    vite: ^6.3.5
+    vitest: ^3.1.4
     wait-port: ^1.1.0
-    zx: ^8.5.0
-
+    zx: ^8.5.4
   server:
-    h3: ^1.15.1
+    h3: ^1.15.3
     lru-cache: ^11.1.0
-    nitropack: ^2.11.8
+    nitropack: ^2.11.12
     npm-package-arg: ^12.0.2
     ofetch: ^1.4.1
-    semver: ^7.7.1
+    semver: ^7.7.2
     ufo: ^1.6.1
-
   types:
-    '@types/node': ^22.14.0
+    '@types/node': ^22.15.21
     '@types/npm-package-arg': ^6.1.4
     '@types/semver': ^7.7.0
+onlyBuiltDependencies:
+  - esbuild
+  - simple-git-hooks
+  - unrs-resolver
