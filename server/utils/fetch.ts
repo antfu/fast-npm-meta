@@ -1,54 +1,14 @@
 /* eslint-disable no-console */
-import type { PackageManifest, PackageManifestError, PackageVersionMeta } from '../../shared/types'
-import { $fetch } from 'ofetch'
-import { joinURL } from 'ufo'
+import type { PackageManifest, PackageManifestError } from '../../shared/types'
+import { fetchPackageManifest as _fetchPackageManifest } from '../../package/src/helpers'
 
-const DOC_ABBREVIATED = 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
-const DOC_FULL = 'application/json'
 const REGISTRY = 'https://registry.npmjs.org/'
 const USER_AGENT = `get-npm-meta`
 const STORAGE_KEY = 'manifest-v2'
 
-const promiseCache = new Map<string, ReturnType<typeof _fetchPackageManifest>>()
+const promiseCache = new Map<string, Promise<PackageManifest>>()
 
 const FullManifest = true
-
-async function _fetchPackageManifest(name: string, registry: string, userAgent: string): Promise<PackageManifest> {
-  console.log('Fetching package:', name)
-
-  const url = joinURL(registry, name)
-
-  const packument = await $fetch(url, {
-    headers: {
-      'user-agent': userAgent,
-      'accept': FullManifest ? DOC_FULL : DOC_ABBREVIATED,
-    },
-  }) as unknown as Packument
-
-  function createPackageVersionMeta(version: string, data: Omit<Packument, 'versions'>): PackageVersionMeta {
-    const meta: PackageVersionMeta = {
-      time: packument.time[version],
-    }
-    if (data.engines)
-      meta.engines = data.engines
-    if (data.deprecated)
-      meta.deprecated = data.deprecated
-    return meta
-  }
-
-  return {
-    name: packument.name,
-    distTags: packument['dist-tags'],
-    versionsMeta: Object.fromEntries(
-      Object.entries(packument.versions).map(([version, data]) => {
-        return [version, createPackageVersionMeta(version, data)] satisfies [string, PackageVersionMeta]
-      }),
-    ),
-    timeCreated: packument.time.created,
-    timeModified: packument.time.modified,
-    lastSynced: Date.now(),
-  }
-}
 
 const CACHE_TIMEOUT = /* 15min */ 1000 * 60 * 15
 const CACHE_TIMEOUT_FORCE = /* 30sec */ 1000 * 30
@@ -81,7 +41,13 @@ export async function fetchPackageManifest(name: string, force = false) {
 
   const registryUrl = config.app.registryUrl || REGISTRY
   const registryUserAgent = config.app.registryUserAgent || USER_AGENT
-  const promise = _fetchPackageManifest(name, registryUrl, registryUserAgent)
+
+  console.log(`Fetching package "${name}" from "${registryUrl}"`)
+  const promise = _fetchPackageManifest(name, {
+    registry: registryUrl,
+    fullManifest: FullManifest,
+    userAgent: registryUserAgent,
+  })
     .then(async (res) => {
       await storage.setItem(name, res)
       return res
@@ -93,7 +59,7 @@ export async function fetchPackageManifest(name: string, force = false) {
         lastSynced: Date.now(),
       }
       await storage.setItem(name, data)
-      throw e.message
+      throw e
     })
     .finally(() => {
       promiseCache.delete(name)
@@ -101,35 +67,4 @@ export async function fetchPackageManifest(name: string, force = false) {
 
   promiseCache.set(name, promise)
   return promise
-}
-
-export interface Packument {
-  'name': string
-  /**
-   * An object where each key is a version, and each value is the engines for
-   * that version.
-   */
-  'engines': Record<string, string>
-  /**
-   * An object where each key is a version, and each value is the manifest for
-   * that version.
-   */
-  'versions': Record<string, Omit<Packument, 'versions'>>
-  /**
-   * An object mapping dist-tags to version numbers. This is how `foo@latest`
-   * gets turned into `foo@1.2.3`.
-   */
-  'dist-tags': { latest: string } & Record<string, string>
-  /**
-   * Deprecated message for the package.
-   */
-  'deprecated'?: string
-  /**
-   * In the full packument, an object mapping version numbers to publication
-   * times, for the `opts.before` functionality.
-   */
-  'time': Record<string, string> & {
-    created: string
-    modified: string
-  }
 }

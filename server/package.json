@@ -15,7 +15,6 @@
     "lru-cache": "catalog:server",
     "nitropack": "catalog:server",
     "npm-package-arg": "catalog:server",
-    "ofetch": "catalog:server",
     "semver": "catalog:server",
     "ufo": "catalog:server"
   }
