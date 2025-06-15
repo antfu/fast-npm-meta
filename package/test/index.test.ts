@@ -119,3 +119,65 @@ it.concurrent('versions', async () => {
       error: '[GET] "https://registry.npmjs.org/@antfu/some-private-package": 404 Not Found',
     })
 })
+
+// These tests verify a defensive mechanism for handling URL encoding variations
+// in batch requests. The root cause of encoding inconsistencies is unclear, so
+// this serves as a safety net until the underlying issue is identified.
+// See: https://github.com/antfu/node-modules-inspector/issues/109
+it.concurrent('batch URL encoding normalization', async () => {
+  const { fetch: fetchApi } = globalThis
+
+  const testCases = [
+    { name: 'normal', url: `${apiEndpoint}/vite@5+vue@3` },
+    { name: '%2B encoded', url: `${apiEndpoint}/vite@5%2Bvue@3` },
+    { name: 'space converted', url: `${apiEndpoint}/vite@5%20vue@3` },
+  ]
+
+  for (const testCase of testCases) {
+    const result = await fetchApi(testCase.url).then(r => r.json())
+    expect(result, `Failed for ${testCase.name} case`)
+      .toMatchObject([
+        {
+          name: 'vite',
+          specifier: '5',
+          version: expect.stringMatching(/^5\.\d+\.\d+$/),
+          lastSynced: expect.any(Number),
+        },
+        {
+          name: 'vue',
+          specifier: '3',
+          version: expect.stringMatching(/^3\.\d+\.\d+$/),
+          lastSynced: expect.any(Number),
+        },
+      ])
+  }
+})
+
+it.concurrent('versions URL encoding normalization', async () => {
+  const { fetch: fetchApi } = globalThis
+
+  const testCases = [
+    { name: 'normal', url: `${apiEndpoint}/versions/vite@5+vue@3` },
+    { name: '%2B encoded', url: `${apiEndpoint}/versions/vite@5%2Bvue@3` },
+    { name: 'space converted', url: `${apiEndpoint}/versions/vite@5%20vue@3` },
+  ]
+
+  for (const testCase of testCases) {
+    const result = await fetchApi(testCase.url).then(r => r.json())
+    expect(result, `Failed for ${testCase.name} case`)
+      .toMatchObject([
+        {
+          name: 'vite',
+          specifier: '5',
+          versions: expect.arrayContaining([expect.stringMatching(/^5\.\d+\.\d+$/)]),
+          lastSynced: expect.any(Number),
+        },
+        {
+          name: 'vue',
+          specifier: '3',
+          versions: expect.arrayContaining([expect.stringMatching(/^3\.\d+\.\d+$/)]),
+          lastSynced: expect.any(Number),
+        },
+      ])
+  }
+})

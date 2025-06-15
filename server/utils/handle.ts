@@ -13,7 +13,10 @@ export async function handlePackagesQuery<T extends object>(
 
   const throwError = !(query.throw === 'false' || query.throw === false)
 
-  const raw = decodeURIComponent(event.context.params.pkg)
+  // Normalize + separator encoding in batch requests (+ → space → %2B variations)
+  // See: https://github.com/antfu/node-modules-inspector/issues/109
+  const raw = decodeURIComponent(event.context.params.pkg.replace(/%2B/g, '+'))
+    .replace(/ /g, '+')
 
   const specs = raw.split('+').filter(Boolean)
 
