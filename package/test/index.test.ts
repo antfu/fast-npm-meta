@@ -12,10 +12,10 @@ it.concurrent('latest', async () => {
       lastSynced: expect.any(Number),
     })
 
-  expect(await getLatestVersion('some-private-package@0', { apiEndpoint, throw: false }))
+  expect(await getLatestVersion('@antfu/some-private-package@0', { apiEndpoint, throw: false }))
     .toMatchObject({
-      name: 'some-private-package@0',
-      error: '[GET] \"https://registry.npmjs.org/some-private-package\": 404 Not Found',
+      name: '@antfu/some-private-package@0',
+      error: '[GET] \"https://registry.npmjs.org/@antfu/some-private-package\": 404 Not Found',
     })
 
   expect(await getLatestVersion('vite@2', { apiEndpoint, metadata: true }))
@@ -27,10 +27,10 @@ it.concurrent('latest', async () => {
       lastSynced: expect.any(Number),
     })
 
-  expect(await getLatestVersion('some-private-package@0', { apiEndpoint, metadata: true, throw: false }))
+  expect(await getLatestVersion('@antfu/some-private-package@0', { apiEndpoint, metadata: true, throw: false }))
     .toMatchObject({
-      name: 'some-private-package@0',
-      error: '[GET] \"https://registry.npmjs.org/some-private-package\": 404 Not Found',
+      name: '@antfu/some-private-package@0',
+      error: '[GET] \"https://registry.npmjs.org/@antfu/some-private-package\": 404 Not Found',
     })
 
   expect(await getLatestVersionBatch(['vite@5', 'nuxt@~3.6'], { apiEndpoint, metadata: true }))
@@ -53,7 +53,7 @@ it.concurrent('latest', async () => {
       },
     ])
 
-  expect(await getLatestVersionBatch(['vite@5', 'some-private-package@0', 'nuxt@~3.6'], { apiEndpoint, metadata: true, throw: false }))
+  expect(await getLatestVersionBatch(['vite@5', '@antfu/some-private-package@0', 'nuxt@~3.6'], { apiEndpoint, metadata: true, throw: false }))
     .toMatchObject([
       {
         name: 'vite',
@@ -63,8 +63,8 @@ it.concurrent('latest', async () => {
         lastSynced: expect.any(Number),
       },
       {
-        name: 'some-private-package@0',
-        error: '[GET] \"https://registry.npmjs.org/some-private-package\": 404 Not Found',
+        name: '@antfu/some-private-package@0',
+        error: '[GET] \"https://registry.npmjs.org/@antfu/some-private-package\": 404 Not Found',
       },
       {
         name: 'nuxt',
@@ -87,15 +87,15 @@ it.concurrent('versions', async () => {
       lastSynced: expect.any(Number),
     })
 
-  await expect(getVersions('some-private-package', { apiEndpoint }))
+  await expect(getVersions('@antfu/some-private-package', { apiEndpoint }))
     .rejects
-    .toThrowErrorMatchingInlineSnapshot(`[Error: [GET] "https://registry.npmjs.org/some-private-package": 404 Not Found]`)
+    .toThrowErrorMatchingInlineSnapshot(`[Error: [GET] "https://registry.npmjs.org/@antfu/some-private-package": 404 Not Found]`)
 
-  await expect(getVersions('some-private-package', { apiEndpoint, throw: false }))
+  await expect(getVersions('@antfu/some-private-package', { apiEndpoint, throw: false }))
     .resolves
     .toMatchObject({
-      name: 'some-private-package',
-      error: '[GET] "https://registry.npmjs.org/some-private-package": 404 Not Found',
+      name: '@antfu/some-private-package',
+      error: '[GET] "https://registry.npmjs.org/@antfu/some-private-package": 404 Not Found',
     })
 
   expect(await getVersions('are-we-there-yet', { apiEndpoint, metadata: true }))
@@ -113,9 +113,9 @@ it.concurrent('versions', async () => {
       lastSynced: expect.any(Number),
     })
 
-  expect(await getVersions('some-private-package', { apiEndpoint, metadata: true, throw: false }))
+  expect(await getVersions('@antfu/some-private-package', { apiEndpoint, metadata: true, throw: false }))
     .toMatchObject({
-      name: 'some-private-package',
-      error: '[GET] "https://registry.npmjs.org/some-private-package": 404 Not Found',
+      name: '@antfu/some-private-package',
+      error: '[GET] "https://registry.npmjs.org/@antfu/some-private-package": 404 Not Found',
     })
 })
