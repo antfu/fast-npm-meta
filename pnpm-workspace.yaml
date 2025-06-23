@@ -3,18 +3,18 @@ packages:
   - package
 catalogs:
   dev:
-    '@antfu/eslint-config': ^4.14.1
+    '@antfu/eslint-config': ^4.16.1
     '@antfu/ni': ^25.0.0
-    bumpp: ^10.1.1
+    bumpp: ^10.2.0
     eslint: ^9.29.0
-    lint-staged: ^16.1.1
+    lint-staged: ^16.1.2
     simple-git-hooks: ^2.13.0
     tinyexec: ^1.0.1
     tsx: ^4.20.3
     typescript: ^5.8.3
     unbuild: ^3.5.0
     vite: ^6.3.5
-    vitest: ^3.2.3
+    vitest: ^3.2.4
     wait-port: ^1.1.0
     zx: ^8.5.5
   server:
@@ -26,7 +26,7 @@ catalogs:
     semver: ^7.7.2
     ufo: ^1.6.1
   types:
-    '@types/node': ^24.0.1
+    '@types/node': ^24.0.3
     '@types/npm-package-arg': ^6.1.4
     '@types/semver': ^7.7.0
 onlyBuiltDependencies:
