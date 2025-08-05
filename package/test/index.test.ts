@@ -108,6 +108,22 @@ it.concurrent('versions', async () => {
             node: '^14.17.0 || ^16.13.0 || >=18.0.0',
           },
           time: expect.any(String),
+          provenance: true,
+        },
+      }),
+      lastSynced: expect.any(Number),
+    })
+
+  expect(await getVersions('unplugin-vue', { apiEndpoint, metadata: true }))
+    .toMatchObject({
+      name: 'unplugin-vue',
+      versionsMeta: expect.objectContaining({
+        '7.0.1': {
+          engines: {
+            node: '>=20.19.0',
+          },
+          time: expect.any(String),
+          provenance: 'trustedPublisher',
         },
       }),
       lastSynced: expect.any(Number),

@@ -15,6 +15,7 @@ export interface PackageVersionMeta {
   time?: string
   engines?: Engines
   deprecated?: string
+  provenance: 'trustedPublisher' | boolean
 }
 
 export interface PackageVersionsInfo extends Pick<PackageManifest, 'name' | 'distTags' | 'lastSynced'> {

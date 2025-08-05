@@ -25,9 +25,10 @@ async function _fetchPackageManifest(name: string, registry: string, userAgent: 
     },
   }) as unknown as Packument
 
-  function createPackageVersionMeta(version: string, data: Omit<Packument, 'versions'>): PackageVersionMeta {
+  function createPackageVersionMeta(version: string, data: PackumentVersion): PackageVersionMeta {
     const meta: PackageVersionMeta = {
       time: packument.time[version],
+      provenance: data._npmUser.trustedPublisher ? 'trustedPublisher' : !!data.dist?.attestations?.provenance,
     }
     if (data.engines)
       meta.engines = data.engines
@@ -103,27 +104,44 @@ export async function fetchPackageManifest(name: string, force = false) {
   return promise
 }
 
-export interface Packument {
-  'name': string
+export interface PackumentVersion {
+  name: string
   /**
    * An object where each key is a version, and each value is the engines for
    * that version.
    */
-  'engines': Record<string, string>
+  engines: Record<string, string>
+  /**
+   * Deprecated message for the package.
+   */
+  deprecated?: string
+  dist: {
+    attestations: {
+      provenance?: { predicateType: string }
+    }
+  }
+  _npmUser: {
+    email: string
+    name: string
+    trustedPublisher?: {
+      id: string
+      oidcConfigId: string
+    }
+  }
+}
+
+export interface Packument {
+  'name': string
   /**
    * An object where each key is a version, and each value is the manifest for
    * that version.
    */
-  'versions': Record<string, Omit<Packument, 'versions'>>
+  'versions': Record<string, PackumentVersion>
   /**
    * An object mapping dist-tags to version numbers. This is how `foo@latest`
    * gets turned into `foo@1.2.3`.
    */
   'dist-tags': { latest: string } & Record<string, string>
-  /**
-   * Deprecated message for the package.
-   */
-  'deprecated'?: string
   /**
    * In the full packument, an object mapping version numbers to publication
    * times, for the `opts.before` functionality.
