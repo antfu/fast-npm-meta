@@ -33,7 +33,7 @@ async function _fetchPackageManifest(name: string, registry: string, userAgent: 
       meta.engines = data.engines
     if (data.deprecated)
       meta.deprecated = data.deprecated
-    const provenance = data._npmUser.trustedPublisher ? 'trustedPublisher' : !!data.dist?.attestations?.provenance
+    const provenance = data._npmUser?.trustedPublisher ? 'trustedPublisher' : !!data.dist?.attestations?.provenance
     if (provenance)
       meta.provenance = provenance
     return meta
