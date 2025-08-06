@@ -117,12 +117,12 @@ export interface PackumentVersion {
    * Deprecated message for the package.
    */
   deprecated?: string
-  dist: {
+  dist?: {
     attestations: {
       provenance?: { predicateType: string }
     }
   }
-  _npmUser: {
+  _npmUser?: {
     email: string
     name: string
     trustedPublisher?: {
