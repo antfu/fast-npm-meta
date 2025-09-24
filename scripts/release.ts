@@ -22,7 +22,8 @@ try {
     await $`git push origin release`
   }
 
-  await $`pnpm publish -r`
+  // Publish on CI
+  // await $`pnpm publish -r`
 
   console.log('New release is ready')
 }
