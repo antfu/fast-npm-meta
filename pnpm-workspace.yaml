@@ -6,6 +6,8 @@ ignoreWorkspaceRootCheck: true
 shellEmulator: true
 
 catalogs:
+  dep:
+    p-retry: ^7.1.0
   dev:
     '@antfu/eslint-config': ^5.4.1
     '@antfu/ni': ^26.0.1

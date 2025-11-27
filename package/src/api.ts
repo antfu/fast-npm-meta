@@ -1,4 +1,49 @@
 import type { MaybeError, PackageVersionsInfo, PackageVersionsInfoWithMetadata, ResolvedPackageVersion, ResolvedPackageVersionWithMetadata } from '../../shared/types'
+import pRetry from 'p-retry'
+
+// explicitly only expose a subset of p-retry's types, in case we might want to swap the implementation
+export interface RetryOptions {
+  /**
+   * The number of times to retry the operation.
+   *
+   * @default 5
+   */
+  retries?: number
+  /**
+   * The exponential factor to use.
+   *
+   * @default 2
+   */
+  factor?: number
+  /**
+   * The number of milliseconds before starting the first retry.
+   *
+   * Set this to `0` to retry immediately with no delay.
+   *
+   * @default 1000
+   */
+  minTimeout?: number
+  /**
+   * The maximum number of milliseconds between two retries.
+   *
+   * @default Infinity
+   */
+  maxTimeout?: number
+  /**
+   * Randomizes the timeouts by multiplying with a factor between 1 and 2.
+   *
+   * @default false
+   */
+  randomize?: boolean
+}
+
+const defaultRetryOptions: RetryOptions = {
+  retries: 5,
+  factor: 2,
+  minTimeout: 1000,
+  maxTimeout: Infinity,
+  randomize: false,
+}
 
 export interface FetchOptions<Throw extends boolean = true> {
   /**
@@ -49,6 +94,10 @@ export interface GetVersionsOptions<
    * @default undefined
    */
   after?: string
+  /**
+   * Retry options for the built-in retry mechanism
+   */
+  retryOpts?: RetryOptions
 }
 
 export interface GetLatestVersionOptions<
@@ -67,6 +116,10 @@ export interface GetLatestVersionOptions<
    * @default false
    */
   metadata?: Metadata
+  /**
+   * Retry options for the built-in retry mechanism
+   */
+  retryOpts?: RetryOptions
 }
 
 export type InferGetVersionsResult<Metadata, Throw> = Metadata extends true
@@ -101,6 +154,7 @@ export async function getLatestVersionBatch<
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
     throw: throwError = true,
+    retryOpts = defaultRetryOptions,
   } = options
 
   let query = [
@@ -111,8 +165,11 @@ export async function getLatestVersionBatch<
   if (query)
     query = `?${query}`
 
-  const data = await fetchApi(new URL(packages.join('+') + query, apiEndpoint))
-    .then(r => r.json()) as InferGetLatestVersionResult<Metadata, Throw> | InferGetLatestVersionResult<Metadata, Throw>[]
+  const data = await pRetry(
+    () => fetchApi(new URL(packages.join('+') + query, apiEndpoint))
+      .then(r => r.json()),
+    retryOpts,
+  ) as InferGetLatestVersionResult<Metadata, Throw> | InferGetLatestVersionResult<Metadata, Throw>[]
 
   const list = toArray(data)
   return throwError
@@ -142,6 +199,7 @@ export async function getVersionsBatch<
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
     throw: throwError = true,
+    retryOpts = defaultRetryOptions,
   } = options
 
   let query = [
@@ -154,8 +212,11 @@ export async function getVersionsBatch<
   if (query)
     query = `?${query}`
 
-  const data = await fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
-    .then(r => r.json()) as InferGetVersionsResult<Metadata, Throw> | InferGetVersionsResult<Metadata, Throw>[]
+  const data = await pRetry(
+    () => fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
+      .then(r => r.json()),
+    retryOpts,
+  ) as InferGetVersionsResult<Metadata, Throw> | InferGetVersionsResult<Metadata, Throw>[]
 
   const list = toArray(data)
   return throwError
