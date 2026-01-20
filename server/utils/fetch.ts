@@ -33,6 +33,8 @@ async function _fetchPackageManifest(name: string, registry: string, userAgent: 
       meta.engines = data.engines
     if (data.deprecated)
       meta.deprecated = data.deprecated
+    if (data.dist.integrity)
+      meta.integrity = data.dist.integrity
     const provenance = data._npmUser?.trustedPublisher ? 'trustedPublisher' : !!data.dist?.attestations?.provenance
     if (provenance)
       meta.provenance = provenance
@@ -121,6 +123,7 @@ export interface PackumentVersion {
     attestations: {
       provenance?: { predicateType: string }
     }
+    integrity?: string
   }
   _npmUser?: {
     email: string
