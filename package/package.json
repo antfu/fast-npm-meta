@@ -27,5 +27,8 @@
     "build": "unbuild",
     "dev": "unbuild --stub",
     "prepublishOnly": "nr build"
+  },
+  "dependencies": {
+    "p-retry": "catalog:dep"
   }
 }

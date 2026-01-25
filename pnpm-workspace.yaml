@@ -8,6 +8,8 @@ packages:
   - package
 
 catalogs:
+  dep:
+    p-retry: ^7.1.0
   dev:
     '@antfu/eslint-config': ^7.0.1
     '@antfu/ni': ^28.2.0
