@@ -326,7 +326,7 @@ The tool does not require any preliminary configuration to work, but you can ove
 | `REGISTRY_URL`        | NPM registry URL                 | https://registry.npmjs.org             |
 | `REGISTRY_USER_AGENT` | User agent for NPM registry requests | `get-npm-meta`                         |
 
-For more information, follow [the official Nitro guides](https://nitro.unjs.io/deploy/runtimes/node#environment-variables).
+For more information, follow [the official Nitro guides](nitro.build/deploy/runtimes/node#environment-variables).
 
 ## Sponsors
 
