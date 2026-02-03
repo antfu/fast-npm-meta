@@ -3,7 +3,7 @@ import { execSync } from 'node:child_process'
 const repoUrl = 'https://github.com/antfu/fast-npm-meta'
 const revision = execSync('git rev-parse HEAD').toString().trim()
 
-// https://nitro.unjs.io/config
+// https://nitro.build/config
 export default defineNitroConfig({
   preset: 'netlify_edge',
 
