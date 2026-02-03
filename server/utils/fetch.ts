@@ -93,12 +93,13 @@ export async function fetchPackageManifest(name: string, force = false) {
     })
     .catch(async (e) => {
       const data: PackageManifestError = {
+        status: e.status,
         name,
         error: e.message,
         lastSynced: Date.now(),
       }
       await storage.setItem(name, data)
-      throw e.message
+      throw e
     })
     .finally(() => {
       promiseCache.delete(name)

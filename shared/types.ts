@@ -33,6 +33,7 @@ export interface PackageVersionsInfoWithMetadata extends PackageManifest {
 }
 
 export interface PackageError {
+  status: number
   name: string
   error: string
 }
