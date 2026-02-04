@@ -314,7 +314,7 @@ console.log(metadata.version) // 5.3.2
 
 ## Configuration
 
-The tool does not require any preliminary configuration to work, but you can override some default parameters through [environment variables or .env files](https://nitro.unjs.io/guide/configuration). The main ones:
+The tool does not require any preliminary configuration to work, but you can override some default parameters through [environment variables or .env files](https://nitro.build/guide/configuration). The main ones:
 
 | Option                | Description                      | Default                                |
 |-----------------------|----------------------------------|----------------------------------------|
@@ -326,7 +326,7 @@ The tool does not require any preliminary configuration to work, but you can ove
 | `REGISTRY_URL`        | NPM registry URL                 | https://registry.npmjs.org             |
 | `REGISTRY_USER_AGENT` | User agent for NPM registry requests | `get-npm-meta`                         |
 
-For more information, follow [the official Nitro guides](nitro.build/deploy/runtimes/node#environment-variables).
+For more information, follow [the official Nitro guides](https://nitro.build/deploy/runtimes/node#environment-variables).
 
 ## Sponsors
 
