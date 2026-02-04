@@ -96,8 +96,13 @@ export interface GetVersionsOptions<
   after?: string
   /**
    * Retry options for the built-in retry mechanism
+   *
+   * Can be:
+   * - `RetryOptions` object for fine-grained control
+   * - `number` for simple retry count (uses defaults for other options)
+   * - `false` to disable retries
    */
-  retryOpts?: RetryOptions
+  retry?: RetryOptions | number | false
 }
 
 export interface GetLatestVersionOptions<
@@ -118,8 +123,13 @@ export interface GetLatestVersionOptions<
   metadata?: Metadata
   /**
    * Retry options for the built-in retry mechanism
+   *
+   * Can be:
+   * - `RetryOptions` object for fine-grained control
+   * - `number` for simple retry count (uses defaults for other options)
+   * - `false` to disable retries
    */
-  retryOpts?: RetryOptions
+  retry?: RetryOptions | number | false
 }
 
 export type InferGetVersionsResult<Metadata, Throw> = Metadata extends true
@@ -154,7 +164,7 @@ export async function getLatestVersionBatch<
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
     throw: throwError = true,
-    retryOpts = defaultRetryOptions,
+    retry = defaultRetryOptions,
   } = options
 
   let query = [
@@ -165,11 +175,13 @@ export async function getLatestVersionBatch<
   if (query)
     query = `?${query}`
 
-  const data = await pRetry(
-    () => fetchApi(new URL(packages.join('+') + query, apiEndpoint))
-      .then(r => r.json()),
-    retryOpts,
-  ) as InferGetLatestVersionResult<Metadata, Throw> | InferGetLatestVersionResult<Metadata, Throw>[]
+  const fetchFn = () => fetchApi(new URL(packages.join('+') + query, apiEndpoint))
+    .then(r => r.json())
+
+  const retryOptions = typeof retry === 'number' ? { ...defaultRetryOptions, retries: retry } : retry
+  const data = await (retry === false
+    ? fetchFn()
+    : pRetry(fetchFn, retryOptions)) as InferGetLatestVersionResult<Metadata, Throw> | InferGetLatestVersionResult<Metadata, Throw>[]
 
   const list = toArray(data)
   return throwError
@@ -199,7 +211,7 @@ export async function getVersionsBatch<
     apiEndpoint = defaultOptions.apiEndpoint,
     fetch: fetchApi = fetch,
     throw: throwError = true,
-    retryOpts = defaultRetryOptions,
+    retry = defaultRetryOptions,
   } = options
 
   let query = [
@@ -212,11 +224,15 @@ export async function getVersionsBatch<
   if (query)
     query = `?${query}`
 
-  const data = await pRetry(
-    () => fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
-      .then(r => r.json()),
-    retryOpts,
-  ) as InferGetVersionsResult<Metadata, Throw> | InferGetVersionsResult<Metadata, Throw>[]
+  const fetchFn = () => fetchApi(new URL(`/versions/${packages.join('+')}${query}`, apiEndpoint))
+    .then(r => r.json())
+
+  const data = await (retry === false
+    ? fetchFn()
+    : pRetry(
+        fetchFn,
+        typeof retry === 'number' ? { ...defaultRetryOptions, retries: retry } : retry,
+      )) as InferGetVersionsResult<Metadata, Throw> | InferGetVersionsResult<Metadata, Throw>[]
 
   const list = toArray(data)
   return throwError
