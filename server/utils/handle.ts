@@ -1,9 +1,11 @@
 import type { EventHandlerRequest, H3Error, H3Event } from 'h3'
 import type { Result as ParsedSpec } from 'npm-package-arg'
 import type { QueryObject } from 'ufo'
-import type { MaybeError } from '../../shared/types'
+import type { MaybeError, PackageError } from '../../shared/types'
 import { createError, getQuery } from 'h3'
 import parsePackage from 'npm-package-arg'
+
+const DEFAULT_ERROR_STATUS = 400
 
 export async function handlePackagesQuery<T extends object>(
   event: H3Event<EventHandlerRequest>,
@@ -31,10 +33,10 @@ export async function handlePackagesQuery<T extends object>(
       parsedSpec = parsePackage(spec)
     }
     catch (error) {
-      const result = { name: spec, error: retrieveErrorMessage(error) }
+      const result: PackageError = { status: DEFAULT_ERROR_STATUS, name: spec, error: retrieveErrorMessage(error) }
       if (throwError) {
         return createError({
-          status: 400,
+          status: result.status,
           message: result.error,
         })
       }
@@ -43,10 +45,10 @@ export async function handlePackagesQuery<T extends object>(
     }
 
     if (!parsedSpec.name) {
-      const result = { name: spec, error: `Invalid package specifier: ${spec}` }
+      const result: PackageError = { status: DEFAULT_ERROR_STATUS, name: spec, error: `Invalid package specifier: ${spec}` }
       if (throwError) {
         return createError({
-          status: 400,
+          status: result.status,
           message: result.error,
         })
       }
@@ -65,6 +67,7 @@ export async function handlePackagesQuery<T extends object>(
         })
         .catch((error) => {
           results[idx] = {
+            status: error.status ?? DEFAULT_ERROR_STATUS,
             name: parsedSpec.raw,
             error: retrieveErrorMessage(error),
           }
@@ -76,7 +79,7 @@ export async function handlePackagesQuery<T extends object>(
     for (const result of results) {
       if (result && 'error' in result) {
         return createError({
-          status: 400,
+          status: result.status,
           message: result.error,
         })
       }
