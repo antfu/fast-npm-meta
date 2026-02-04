@@ -107,6 +107,7 @@ it.concurrent('versions', async () => {
           engines: {
             node: '^14.17.0 || ^16.13.0 || >=18.0.0',
           },
+          integrity: expect.any(String),
           time: expect.any(String),
           provenance: true,
         },
@@ -123,6 +124,7 @@ it.concurrent('versions', async () => {
             node: '>=20.19.0',
           },
           time: expect.any(String),
+          integrity: expect.any(String),
           provenance: 'trustedPublisher',
         },
       }),

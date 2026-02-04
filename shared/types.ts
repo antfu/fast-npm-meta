@@ -16,6 +16,7 @@ export interface PackageVersionMeta {
   engines?: Engines
   deprecated?: string
   provenance?: 'trustedPublisher' | boolean
+  integrity?: string
 }
 
 export interface PackageVersionsInfo extends Pick<PackageManifest, 'name' | 'distTags' | 'lastSynced'> {
@@ -32,6 +33,7 @@ export interface PackageVersionsInfoWithMetadata extends PackageManifest {
 }
 
 export interface PackageError {
+  status: number
   name: string
   error: string
 }

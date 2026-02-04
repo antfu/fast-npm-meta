@@ -33,6 +33,8 @@ async function _fetchPackageManifest(name: string, registry: string, userAgent: 
       meta.engines = data.engines
     if (data.deprecated)
       meta.deprecated = data.deprecated
+    if (data.dist.integrity)
+      meta.integrity = data.dist.integrity
     const provenance = data._npmUser?.trustedPublisher ? 'trustedPublisher' : !!data.dist?.attestations?.provenance
     if (provenance)
       meta.provenance = provenance
@@ -91,12 +93,13 @@ export async function fetchPackageManifest(name: string, force = false) {
     })
     .catch(async (e) => {
       const data: PackageManifestError = {
+        status: e.status,
         name,
         error: e.message,
         lastSynced: Date.now(),
       }
       await storage.setItem(name, data)
-      throw e.message
+      throw e
     })
     .finally(() => {
       promiseCache.delete(name)
@@ -121,6 +124,7 @@ export interface PackumentVersion {
     attestations: {
       provenance?: { predicateType: string }
     }
+    integrity?: string
   }
   _npmUser?: {
     email: string

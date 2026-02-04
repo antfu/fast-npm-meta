@@ -57,7 +57,7 @@ export default eventHandler(async (event) => {
         } satisfies PackageVersionsInfoWithMetadata
       }
 
-      return <PackageVersionsInfo>{
+      return {
         name: spec.name,
         specifier: spec.fetchSpec,
         distTags: manifest.distTags,
@@ -70,7 +70,7 @@ export default eventHandler(async (event) => {
           created: manifest.timeCreated,
           modified: manifest.timeModified,
         },
-      }
+      } satisfies PackageVersionsInfo
     },
   )
 })

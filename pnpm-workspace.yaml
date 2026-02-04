@@ -1,38 +1,40 @@
+ignoreWorkspaceRootCheck: true
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
 packages:
   - server
   - package
-
-ignoreWorkspaceRootCheck: true
-shellEmulator: true
 
 catalogs:
   dep:
     p-retry: ^7.1.0
   dev:
-    '@antfu/eslint-config': ^5.4.1
-    '@antfu/ni': ^26.0.1
-    bumpp: ^10.2.3
-    eslint: ^9.36.0
-    lint-staged: ^16.2.0
+    '@antfu/eslint-config': ^7.0.1
+    '@antfu/ni': ^28.2.0
+    bumpp: ^10.4.0
+    eslint: ^9.39.2
+    lint-staged: ^16.2.7
     simple-git-hooks: ^2.13.1
-    tinyexec: ^1.0.1
-    tsx: ^4.20.5
-    typescript: ^5.9.2
+    tinyexec: ^1.0.2
+    tsx: ^4.21.0
+    typescript: ^5.9.3
     unbuild: ^3.6.1
-    vite: ^7.1.7
-    vitest: ^3.2.4
+    vite: ^7.3.1
+    vitest: ^4.0.17
     wait-port: ^1.1.0
-    zx: ^8.8.3
+    zx: ^8.8.5
   server:
-    h3: ^1.15.4
-    lru-cache: ^11.2.2
-    nitropack: ^2.12.6
-    npm-package-arg: ^13.0.0
-    ofetch: ^1.4.1
-    semver: ^7.7.2
-    ufo: ^1.6.1
+    h3: ^1.15.5
+    lru-cache: ^11.2.4
+    nitropack: ^2.13.1
+    npm-package-arg: ^13.0.2
+    ofetch: ^1.5.1
+    semver: ^7.7.3
+    ufo: ^1.6.3
   types:
-    '@types/node': ^24.5.2
+    '@types/node': ^25.0.9
     '@types/npm-package-arg': ^6.1.4
     '@types/semver': ^7.7.1
 onlyBuiltDependencies:
