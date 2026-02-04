@@ -178,8 +178,8 @@ export async function getLatestVersionBatch<
   const fetchFn = () => fetchApi(new URL(packages.join('+') + query, apiEndpoint))
     .then(r => r.json())
 
-  const retryOptions = typeof retry === 'number' ? { ...defaultRetryOptions, retries: retry } : retry
-  const data = await (retry === false
+  const retryOptions: RetryOptions | false = typeof retry === 'number' ? { ...defaultRetryOptions, retries: retry } : retry
+  const data = await (retryOptions === false
     ? fetchFn()
     : pRetry(fetchFn, retryOptions)) as InferGetLatestVersionResult<Metadata, Throw> | InferGetLatestVersionResult<Metadata, Throw>[]
 
