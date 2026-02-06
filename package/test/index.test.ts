@@ -76,6 +76,13 @@ it.concurrent('latest', async () => {
         lastSynced: expect.any(Number),
       },
     ])
+
+  expect(await getLatestVersion('vite@=7.0.3', { apiEndpoint, throw: false }))
+    .toMatchObject({
+      name: 'vite',
+      specifier: '=7.0.3',
+      version: '7.0.3',
+    })
 })
 
 it.concurrent('versions', async () => {

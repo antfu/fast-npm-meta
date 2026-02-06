@@ -34,7 +34,7 @@ export default eventHandler(async (event) => {
         })
       }
       else if (spec.type === 'version') {
-        version = spec.fetchSpec
+        version = semver.clean(spec.fetchSpec, true)
         specifier = spec.fetchSpec
       }
       else {
