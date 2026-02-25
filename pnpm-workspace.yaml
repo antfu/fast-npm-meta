@@ -10,15 +10,15 @@ packages:
 catalogs:
   dep: {}
   dev:
-    '@antfu/eslint-config': ^7.2.0
+    '@antfu/eslint-config': ^7.6.0
     '@antfu/ni': ^28.2.0
-    bumpp: ^10.4.0
-    eslint: ^9.39.2
+    bumpp: ^10.4.1
+    eslint: ^10.0.2
     lint-staged: ^16.2.7
     p-retry: ^7.1.1
     simple-git-hooks: ^2.13.1
     tinyexec: ^1.0.2
-    tsdown: ^0.20.1
+    tsdown: ^0.20.3
     tsx: ^4.21.0
     typescript: ^5.9.3
     vite: ^7.3.1
@@ -27,14 +27,14 @@ catalogs:
     zx: ^8.8.5
   server:
     h3: ^1.15.5
-    lru-cache: ^11.2.5
+    lru-cache: ^11.2.6
     nitropack: ^2.13.1
     npm-package-arg: ^13.0.2
     ofetch: ^1.5.1
-    semver: ^7.7.3
+    semver: ^7.7.4
     ufo: ^1.6.3
   types:
-    '@types/node': ^25.2.0
+    '@types/node': ^25.3.0
     '@types/npm-package-arg': ^6.1.4
     '@types/semver': ^7.7.1
 onlyBuiltDependencies:
