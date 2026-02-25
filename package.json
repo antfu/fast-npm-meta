@@ -11,7 +11,7 @@
     "lint:fix": "eslint . --fix",
     "prepublishOnly": "nr build",
     "release": "tsx scripts/release.ts",
-    "start": "tsx src/index.ts",
+    "start": "tsx package/src/cli.ts",
     "test": "vitest --typecheck",
     "typecheck": "tsc --noEmit",
     "prepare": "simple-git-hooks"

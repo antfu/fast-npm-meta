@@ -312,6 +312,68 @@ const metadata = await getLatestVersion('vite')
 console.log(metadata.version) // 5.3.2
 ```
 
+## CLI
+
+The package ships with a `fast-npm-meta` CLI for quick lookups from the terminal.
+
+```bash
+npm install -g fast-npm-meta
+```
+
+### Get the latest version
+
+Returns plain text — one version per line, suitable for scripting.
+
+```sh
+fast-npm-meta version vite
+# 7.3.1
+fast-npm-meta version vite@2
+# 2.9.18
+fast-npm-meta version "nuxt@^3.5"
+# 3.5.22
+fast-npm-meta version vite nuxt vue
+# 7.3.1
+# 4.3.1
+# 3.5.29
+```
+
+### Get version as JSON
+
+```sh
+fast-npm-meta version vite --json
+```
+
+```json
+{
+  "name": "vite",
+  "specifier": "latest",
+  "version": "7.3.1",
+  "publishedAt": "2026-01-07T06:07:43.726Z",
+  "lastSynced": 1771999110436
+}
+```
+
+Multiple packages return an array. Include extra metadata (engines, deprecated, provenance, etc.) with `--metadata`:
+
+```sh
+fast-npm-meta version vite --json --metadata
+```
+
+### Get full package metadata
+
+Returns the full versions list, dist-tags, and timestamps as JSON.
+
+```sh
+fast-npm-meta full vite
+fast-npm-meta full vite nuxt vue  # returns an array
+```
+
+Add `--metadata` to include per-version metadata (`engines`, `deprecated`, `integrity`, etc.):
+
+```sh
+fast-npm-meta full vite --metadata
+```
+
 ## Configuration
 
 The tool does not require any preliminary configuration to work, but you can override some default parameters through [environment variables or .env files](https://nitro.build/guide/configuration). The main ones:

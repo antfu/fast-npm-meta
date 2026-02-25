@@ -19,8 +19,12 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.mts",
+  "bin": {
+    "fast-npm-meta": "./dist/cli.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "skills"
   ],
   "scripts": {
     "build": "tsdown",
@@ -28,6 +32,7 @@
     "prepublishOnly": "nr build"
   },
   "devDependencies": {
+    "cac": "catalog:dev",
     "p-retry": "catalog:dev",
     "tsdown": "catalog:dev"
   }

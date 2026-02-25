@@ -13,6 +13,7 @@ catalogs:
     '@antfu/eslint-config': ^7.6.0
     '@antfu/ni': ^28.2.0
     bumpp: ^10.4.1
+    cac: ^6.7.14
     eslint: ^10.0.2
     lint-staged: ^16.2.7
     p-retry: ^7.1.1
