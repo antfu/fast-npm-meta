@@ -1,61 +1,66 @@
-import type { ResolvedPackageVersion, ResolvedPackageVersionWithMetadata } from '../../shared/types'
+import type {
+  ResolvedPackageVersion,
+  ResolvedPackageVersionWithMetadata,
+} from '../../shared/types'
 import semver from 'semver'
 import { fetchPackageManifest } from '../utils/fetch'
 import { handlePackagesQuery } from '../utils/handle'
 
 export default eventHandler(async (event) => {
-  return handlePackagesQuery<ResolvedPackageVersion | ResolvedPackageVersionWithMetadata>(
-    event,
-    async (spec, query) => {
-      const data = await fetchPackageManifest(spec.name, !!query.force)
+  return handlePackagesQuery<
+    ResolvedPackageVersion | ResolvedPackageVersionWithMetadata
+  >(event, async (spec, query) => {
+    const data = await fetchPackageManifest(spec.name, !!query.force)
 
-      let version: string | null = null
-      let specifier = 'latest'
+    let version: string | null = null
+    let specifier = 'latest'
 
-      if (spec.type === 'tag') {
-        specifier = spec.fetchSpec
-        version = data.distTags[spec.fetchSpec]
-      }
-      else if (spec.type === 'range' && (spec.fetchSpec === '*' || spec.fetchSpec === 'latest')) {
-        version = data.distTags.latest
-        specifier = 'latest'
-      }
-      else if (spec.type === 'range') {
-        specifier = spec.fetchSpec
-        let maxVersion: string | null = data.distTags.latest
-        if (!semver.satisfies(maxVersion, spec.fetchSpec))
-          maxVersion = null
+    if (spec.type === 'tag') {
+      specifier = spec.fetchSpec
+      version = data.distTags[spec.fetchSpec]
+    }
+    else if (
+      spec.type === 'range'
+      && (spec.fetchSpec === '*' || spec.fetchSpec === 'latest')
+    ) {
+      version = data.distTags.latest
+      specifier = 'latest'
+    }
+    else if (spec.type === 'range') {
+      specifier = spec.fetchSpec
+      let maxVersion: string | null = data.distTags.latest
+      if (!semver.satisfies(maxVersion, spec.fetchSpec))
+        maxVersion = null
 
-        Object.keys(data.versionsMeta).forEach((ver) => {
-          if (semver.satisfies(ver, spec.fetchSpec)) {
-            if (!maxVersion || semver.lte(ver, maxVersion))
-              version = ver
-          }
-        })
-      }
-      else if (spec.type === 'version') {
-        version = semver.clean(spec.fetchSpec, true)
-        specifier = spec.fetchSpec
-      }
-      else {
-        throw new Error(`Unsupported spec: ${JSON.stringify(spec)}`)
-      }
+      Object.keys(data.versionsMeta).forEach((ver) => {
+        if (semver.satisfies(ver, spec.fetchSpec)) {
+          if (!maxVersion || semver.lte(ver, maxVersion))
+            version = ver
+        }
+      })
+    }
+    else if (spec.type === 'version') {
+      version = semver.clean(spec.fetchSpec, true)
+      specifier = spec.fetchSpec
+    }
+    else {
+      throw new Error(`Unsupported spec: ${JSON.stringify(spec)}`)
+    }
 
-      const meta = data.versionsMeta[version]
+    const meta = data.versionsMeta[version]
 
-      const result: ResolvedPackageVersion = {
-        name: spec.name,
-        specifier,
-        version,
-        publishedAt: meta.time,
-        lastSynced: data.lastSynced,
-      }
+    const result: ResolvedPackageVersion = {
+      name: spec.name,
+      specifier,
+      version,
+      publishedAt: meta?.time || undefined,
+      lastSynced: data.lastSynced,
+    }
 
-      if (query.metadata) {
-        Object.assign(result, meta)
-      }
+    if (query.metadata) {
+      Object.assign(result, meta)
+    }
 
-      return result
-    },
-  )
+    return result
+  })
 })

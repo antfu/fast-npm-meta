@@ -15,10 +15,9 @@ export async function handlePackagesQuery<T extends object>(
 
   const throwError = !(query.throw === 'false' || query.throw === false)
 
-  // Normalize + separator encoding in batch requests (+ → space → %2B variations)
+  // Normalize + separator encoding in batch requests (+ → %2B variations)
   // See: https://github.com/antfu/node-modules-inspector/issues/109
   const raw = decodeURIComponent(event.context.params.pkg.replace(/%2B/g, '+'))
-    .replace(/ /g, '+')
 
   const specs = raw.split('+').filter(Boolean)
 
@@ -30,10 +29,14 @@ export async function handlePackagesQuery<T extends object>(
     let parsedSpec: ParsedSpec
     try {
       // Throws if the package name is invalid
-      parsedSpec = parsePackage(spec)
+      parsedSpec = parsePackage(normalizeSemverRange(spec))
     }
     catch (error) {
-      const result: PackageError = { status: DEFAULT_ERROR_STATUS, name: spec, error: retrieveErrorMessage(error) }
+      const result: PackageError = {
+        status: DEFAULT_ERROR_STATUS,
+        name: spec,
+        error: retrieveErrorMessage(error),
+      }
       if (throwError) {
         return createError({
           status: result.status,
@@ -45,7 +48,11 @@ export async function handlePackagesQuery<T extends object>(
     }
 
     if (!parsedSpec.name) {
-      const result: PackageError = { status: DEFAULT_ERROR_STATUS, name: spec, error: `Invalid package specifier: ${spec}` }
+      const result: PackageError = {
+        status: DEFAULT_ERROR_STATUS,
+        name: spec,
+        error: `Invalid package specifier: ${spec}`,
+      }
       if (throwError) {
         return createError({
           status: result.status,
@@ -60,19 +67,21 @@ export async function handlePackagesQuery<T extends object>(
   }
 
   if (validSpecs.length) {
-    await Promise.allSettled(validSpecs.map(async ([idx, parsedSpec]) =>
-      handler(parsedSpec, query)
-        .then((result) => {
-          results[idx] = result
-        })
-        .catch((error) => {
-          results[idx] = {
-            status: error.status ?? DEFAULT_ERROR_STATUS,
-            name: parsedSpec.raw,
-            error: retrieveErrorMessage(error),
-          }
-        }),
-    ))
+    await Promise.allSettled(
+      validSpecs.map(async ([idx, parsedSpec]) =>
+        handler(parsedSpec, query)
+          .then((result) => {
+            results[idx] = result
+          })
+          .catch((error) => {
+            results[idx] = {
+              status: error.status ?? DEFAULT_ERROR_STATUS,
+              name: parsedSpec.raw,
+              error: retrieveErrorMessage(error),
+            }
+          }),
+      ),
+    )
   }
 
   if (throwError) {
@@ -97,4 +106,19 @@ function retrieveErrorMessage(error: unknown): string {
     return error.message as string
   }
   return error ? String(error) : 'Unknown error'
+}
+
+function normalizeSemverRange(rangeSpec: string): string {
+  return (
+    rangeSpec
+      // Remove possible space after @: pkg@ >1 → pkg@>1
+      .replace(/@\s+/g, '@')
+      // Normalize Hyphens: "1- 3", "1 -3", "1-3" → "1 - 3"
+      .replace(/(?<=[0-9x*])\s*-\s*(?=[0-9x*])/gi, ' - ')
+      // Normalize Comparators: "pkg@>1<3" → "pkg@>1 <3"
+      .replace(/(?<=[0-9x*])(?=[<>=^~])/gi, ' ')
+      // Collapse multiple spaces
+      .replace(/\s+/g, ' ')
+      .trim()
+  )
 }

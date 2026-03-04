@@ -155,7 +155,6 @@ it.concurrent('batch URL encoding normalization', async () => {
   const testCases = [
     { name: 'normal', url: `${apiEndpoint}/vite@5+vue@3` },
     { name: '%2B encoded', url: `${apiEndpoint}/vite@5%2Bvue@3` },
-    { name: 'space converted', url: `${apiEndpoint}/vite@5%20vue@3` },
   ]
 
   for (const testCase of testCases) {
@@ -184,7 +183,6 @@ it.concurrent('versions URL encoding normalization', async () => {
   const testCases = [
     { name: 'normal', url: `${apiEndpoint}/versions/vite@5+vue@3` },
     { name: '%2B encoded', url: `${apiEndpoint}/versions/vite@5%2Bvue@3` },
-    { name: 'space converted', url: `${apiEndpoint}/versions/vite@5%20vue@3` },
   ]
 
   for (const testCase of testCases) {
@@ -205,4 +203,70 @@ it.concurrent('versions URL encoding normalization', async () => {
         },
       ])
   }
+})
+
+it.concurrent('semver range normalization', async () => {
+  const { fetch: fetchApi } = globalThis
+
+  // Comparators range with/without space
+  const testCases = [
+    {
+      name: 'comparator range with space',
+      url: `${apiEndpoint}/vite@>=5.0.0%20<6.0.0`,
+    },
+    {
+      name: 'comparator range no space',
+      url: `${apiEndpoint}/vite@>=5.0.0<6.0.0`,
+    },
+  ]
+
+  for (const testCase of testCases) {
+    const result = await fetchApi(testCase.url).then(r => r.json())
+    expect(result, `Failed for ${testCase.name} case`).toMatchObject({
+      name: 'vite',
+      specifier: '>=5.0.0 <6.0.0',
+      version: expect.stringMatching(/^5\.\d+\.\d+$/),
+      lastSynced: expect.any(Number),
+      publishedAt: expect.any(String),
+    })
+  }
+
+  // Hyphen range with/without spaces: 5.0.0-5.4.0 → 5.0.0 - 5.4.0
+  const testCasesHyphen = [
+    {
+      name: 'hyphen range without spaces',
+      url: `${apiEndpoint}/vite@5.0.0-5.4.0`,
+    },
+    {
+      name: 'hyphen range with spaces',
+      url: `${apiEndpoint}/vite@5.0.0%20-%205.4.0`,
+    },
+    {
+      name: 'hyphen range with 1 space',
+      url: `${apiEndpoint}/vite@5.0.0-%205.4.0`,
+    },
+    {
+      name: 'hyphen range with 1 space after',
+      url: `${apiEndpoint}/vite@5.0.0%20-5.4.0`,
+    },
+  ]
+
+  for (const testCase of testCasesHyphen) {
+    const result = await fetchApi(testCase.url).then(r => r.json())
+    expect(result, `Failed for ${testCase.name} case`).toMatchObject({
+      name: 'vite',
+      specifier: '5.0.0 - 5.4.0',
+      version: expect.stringMatching(/^5\.[0-4]\.\d+$/),
+    })
+  }
+
+  // Space after @: vite@%20>=5.0.0 → vite@>=5.0.0 (decodes to "vite@ >=5.0.0")
+  const spaceAfterAt = await fetchApi(`${apiEndpoint}/vite@%20>=5.0.0`).then(
+    r => r.json(),
+  )
+  expect(spaceAfterAt, 'space after @').toMatchObject({
+    name: 'vite',
+    specifier: '>=5.0.0',
+    version: expect.stringMatching(/^\d+\.\d+\.\d+$/),
+  })
 })
