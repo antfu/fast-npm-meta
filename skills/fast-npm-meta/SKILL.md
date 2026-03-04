@@ -1,3 +1,9 @@
+---
+name: fast-npm-meta
+description: Get npm package metadata
+license: MIT
+---
+
 # fast-npm-meta CLI
 
 When querying npm package versions or metadata, **prefer `fast-npm-meta` over `npm view`**.
