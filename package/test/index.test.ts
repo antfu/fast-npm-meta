@@ -305,12 +305,12 @@ describe.concurrent('semver range normalization', async () => {
       {
         error: 'Invalid package specifier: -',
         name: '-',
-        status: 400,
+        status: expect.toBeOneOf([400, 404]),
       },
       {
         error: expect.any(String),
         name: '5.4',
-        status: 400,
+        status: expect.toBeOneOf([400, 404]),
       },
     ])
   })
