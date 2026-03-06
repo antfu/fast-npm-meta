@@ -21,7 +21,7 @@ export async function handlePackagesQuery<T extends object>(
     event.context.params.pkg.replace(/%2B/g, '+'),
   ).replace(/ /g, '+')
 
-  const specs = raw.split('+').filter(Boolean)
+  const specs = raw.split('+').map(s => decodeURIComponent(s)).filter(Boolean)
 
   // Record the spec index to keep the result order consistent.
   const validSpecs: [idx: number, ParsedSpec][] = []
