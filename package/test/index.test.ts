@@ -280,25 +280,25 @@ describe.concurrent('semver range normalization', async () => {
   })
 
   it('hyphen range without spaces', async () => {
-    const result = await fetchApi(`${apiEndpoint}/vite@5.0.0-5.4.0`).then(r =>
+    const result = await fetchApi(`${apiEndpoint}/vite@5.0-5.4`).then(r =>
       r.json(),
     )
     expect(result).toMatchObject({
       name: 'vite',
-      specifier: '5.0.0 - 5.4.0',
+      specifier: '5.0 - 5.4',
       version: expect.stringMatching(/^5\.[0-4]\.\d+$/),
     })
   })
 
   it('hyphen range with spaces', async () => {
     const result = await fetchApi(
-      `${apiEndpoint}/vite@5.0.0%20-%205.4.0?throw=false`,
+      `${apiEndpoint}/vite@5.0%20-%205.4?throw=false`,
     ).then(r => r.json())
     expect(result).toMatchObject([
       {
         name: 'vite',
-        specifier: '5.0.0',
-        version: '5.0.0',
+        specifier: '5.0',
+        version: '5.0.13',
         lastSynced: expect.any(Number),
         publishedAt: expect.any(String),
       },
@@ -309,9 +309,78 @@ describe.concurrent('semver range normalization', async () => {
       },
       {
         error: expect.any(String),
-        name: '5.4.0',
+        name: '5.4',
         status: 400,
       },
     ])
+  })
+})
+
+describe.concurrent('complex package names, complex versions', async () => {
+  const { fetch: fetchApi } = globalThis
+  const pkgName = '@rolldown/binding-win32-x64-msvc'
+
+  it('multi-word package name without version', async () => {
+    const result = await fetchApi(`${apiEndpoint}/${pkgName}`).then(r =>
+      r.json(),
+    )
+
+    expect(result).toMatchObject({
+      name: pkgName,
+      specifier: 'latest',
+      version: expect.any(String),
+      lastSynced: expect.any(Number),
+      publishedAt: expect.any(String),
+    })
+  })
+
+  it('multi-word package name with caret range version', async () => {
+    const result = await fetchApi(`${apiEndpoint}/${pkgName}@^0`).then(r =>
+      r.json(),
+    )
+    expect(result).toMatchObject({
+      name: pkgName,
+      specifier: '^0',
+      version: expect.any(String),
+      lastSynced: expect.any(Number),
+      publishedAt: expect.any(String),
+    })
+  })
+
+  it('multi-word package name with hyphen range version', async () => {
+    const result = await fetchApi(`${apiEndpoint}/${pkgName}@0-1`).then(r =>
+      r.json(),
+    )
+    expect(result).toMatchObject({
+      name: pkgName,
+      specifier: '0 - 1',
+      version: expect.any(String),
+      lastSynced: expect.any(Number),
+      publishedAt: expect.any(String),
+    })
+  })
+
+  it('multi-word package name with pre release version with hyphen in specifier', async () => {
+    const result = await fetchApi(`${apiEndpoint}/${pkgName}@1.0.0-pr.6`).then(
+      r => r.json(),
+    )
+    expect(result).toMatchObject({
+      name: pkgName,
+      specifier: '1.0.0-pr.6',
+      version: '1.0.0-pr.6',
+      lastSynced: expect.any(Number),
+    })
+  })
+
+  it('package with multi-word version with hyphen', async () => {
+    const result = await fetchApi(
+      `${apiEndpoint}/typescript@4.6.2-insiders.20220225`,
+    ).then(r => r.json())
+    expect(result).toMatchObject({
+      name: 'typescript',
+      specifier: '4.6.2-insiders.20220225',
+      version: '4.6.2-insiders.20220225',
+      lastSynced: expect.any(Number),
+    })
   })
 })
