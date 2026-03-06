@@ -16,10 +16,9 @@ export async function handlePackagesQuery<T extends object>(
   const throwError = !(query.throw === 'false' || query.throw === false)
 
   // Normalize + separator encoding in batch requests (+ → %2B variations)
-  // See: https://github.com/antfu/node-modules-inspector/issues/109
-  const raw = decodeURIComponent(event.context.params.pkg.replace(/%2B/g, '+'))
+  const raw = event.context.params.pkg.replace(/%2B/g, '+')
 
-  const specs = raw.split('+').filter(Boolean)
+  const specs = raw.split('+').map(s => decodeURIComponent(s)).filter(Boolean)
 
   // Record the spec index to keep the result order consistent.
   const validSpecs: [idx: number, ParsedSpec][] = []
