@@ -7,8 +7,6 @@ packages:
   - server
   - package
 
-catalog:
-  dev: ^0.1.3
 catalogs:
   dep: {}
   dev:
