@@ -62,6 +62,8 @@ Returns
 
 #### 📦 Get the Latest Version of a Range
 
+##### Using caret: "^"
+
 ```sh
 curl https://npm.antfu.dev/vite@^2.1.0
 ```
@@ -75,6 +77,44 @@ Returns
   "version": "2.9.18",
   "publishedAt": "2024-03-24T15:06:20.353Z",
   "lastSynced": 1735496799048
+}
+```
+
+##### Using comparators: ">=", "<="
+
+```sh
+# ⚠️ Remove spaces from semver range
+curl https://npm.antfu.dev/vite@>=2<4
+```
+
+Returns
+
+```json
+{
+  "name": "vite",
+  "specifier": ">=2 <4",
+  "version": "3.2.11",
+  "publishedAt": "2024-09-17T07:34:48.227Z",
+  "lastSynced": 1772797798068
+}
+```
+
+##### Using hyphen: "-"
+
+```sh
+# ⚠️ Remove spaces from semver range
+curl https://npm.antfu.dev/vite@2-4
+```
+
+Returns
+
+```json
+{
+  "name": "vite",
+  "specifier": "2 - 4",
+  "version": "4.5.14",
+  "publishedAt": "2025-04-30T06:00:52.445Z",
+  "lastSynced": 1772797798068
 }
 ```
 
