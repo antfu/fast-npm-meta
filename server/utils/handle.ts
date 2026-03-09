@@ -16,7 +16,10 @@ export async function handlePackagesQuery<T extends object>(
   const throwError = !(query.throw === 'false' || query.throw === false)
 
   // Normalize + separator encoding in batch requests (+ → %2B variations)
-  const raw = event.context.params.pkg.replace(/%2B/g, '+')
+  // See: https://github.com/antfu/node-modules-inspector/issues/109
+  const raw = decodeURIComponent(
+    event.context.params.pkg.replace(/%2B/g, '+'),
+  ).replace(/ /g, '+')
 
   const specs = raw.split('+').map(s => decodeURIComponent(s)).filter(Boolean)
 
@@ -107,17 +110,29 @@ function retrieveErrorMessage(error: unknown): string {
   return error ? String(error) : 'Unknown error'
 }
 
-function normalizeSemverRange(rangeSpec: string): string {
-  return (
-    rangeSpec
-      // Remove possible space after @: pkg@ >1 → pkg@>1
-      .replace(/@\s+/g, '@')
-      // Normalize Hyphens: "1- 3", "1 -3", "1-3" → "1 - 3"
-      .replace(/(?<=[0-9x*])\s*-\s*(?=[0-9x*])/gi, ' - ')
-      // Normalize Comparators: "pkg@>1<3" → "pkg@>1 <3"
-      .replace(/(?<=[0-9x*])(?=[<>=^~])/gi, ' ')
-      // Collapse multiple spaces
-      .replace(/\s+/g, ' ')
-      .trim()
-  )
+function normalizeSemverRange(spec: string): string {
+  const lastAtIndex = spec.lastIndexOf('@')
+
+  // exit early if no version part included
+  if (lastAtIndex <= 0) {
+    return spec
+  }
+
+  const pkg = spec.slice(0, lastAtIndex)
+  const version = spec.slice(lastAtIndex + 1)
+
+  const normalizedVersion = version
+    // Normalize Hyphens: "1-3" → "1 - 3"
+    .replace(/(?<=\d)-(?=\d)/g, (match, offset, str) => {
+      // If preceded by a full x.y.z version, it's a pre-release tag - do not add spaces not to break it
+      const before = str.slice(0, offset)
+      return /\d+\.\d+\.\d+$/.test(before) ? match : ' - '
+    })
+    // Normalize Comparators: "pkg@>1<3" → "pkg@>1 <3"
+    .replace(/(?<=[0-9x*])(?=[<>=^~])/gi, ' ')
+    // Collapse multiple spaces
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  return `${pkg}@${normalizedVersion}`
 }

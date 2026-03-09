@@ -15,18 +15,12 @@ catalogs:
     bumpp:
       specifier: ^10.4.1
       version: 10.4.1
-    cac:
-      specifier: ^7.0.0
-      version: 7.0.0
     eslint:
       specifier: ^10.0.2
       version: 10.0.2
     lint-staged:
       specifier: ^16.3.2
       version: 16.3.2
-    p-retry:
-      specifier: ^7.1.1
-      version: 7.1.1
     simple-git-hooks:
       specifier: ^2.13.1
       version: 2.13.1
@@ -54,38 +48,10 @@ catalogs:
     zx:
       specifier: ^8.8.5
       version: 8.8.5
-  server:
-    h3:
-      specifier: ^1.15.5
-      version: 1.15.5
-    lru-cache:
-      specifier: ^11.2.6
-      version: 11.2.6
-    nitropack:
-      specifier: ^2.13.1
-      version: 2.13.1
-    npm-package-arg:
-      specifier: ^13.0.2
-      version: 13.0.2
-    ofetch:
-      specifier: ^1.5.1
-      version: 1.5.1
-    semver:
-      specifier: ^7.7.4
-      version: 7.7.4
-    ufo:
-      specifier: ^1.6.3
-      version: 1.6.3
   types:
     '@types/node':
       specifier: ^25.3.5
       version: 25.3.5
-    '@types/npm-package-arg':
-      specifier: ^6.1.4
-      version: 6.1.4
-    '@types/semver':
-      specifier: ^7.7.1
-      version: 7.7.1
 
 overrides:
   chokidar: ^5.0.0
@@ -7025,7 +6991,7 @@ snapshots:
   terser@5.31.1:
     dependencies:
       '@jridgewell/source-map': 0.3.6
-      acorn: 8.15.0
+      acorn: 8.16.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
