@@ -126,7 +126,13 @@ function normalizeSemverRange(spec: string): string {
     .replace(/(?<=\d)-(?=\d)/g, (match, offset, str) => {
       // If preceded by a full x.y.z version, it's a pre-release tag - do not add spaces not to break it
       const before = str.slice(0, offset)
-      return /\d+\.\d+\.\d+$/.test(before) ? match : ' - '
+
+      // Keep the hyphen if we are right after a full x.y.z (start of a pre-release),
+      // OR we are already inside a pre-release (a previous "-" exists)
+      // Otherwise it is a range hyphen and we want spaces.
+      return /\d+\.\d+\.\d+$/.test(before) || before.includes('-')
+        ? match
+        : ' - '
     })
     // Normalize Comparators: "pkg@>1<3" → "pkg@>1 <3"
     .replace(/(?<=[0-9x*])(?=[<>=^~])/gi, ' ')
