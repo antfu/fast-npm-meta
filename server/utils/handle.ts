@@ -77,7 +77,7 @@ export async function handlePackagesQuery<T extends object>(
           })
           .catch((error) => {
             results[idx] = {
-              status: error.status ?? DEFAULT_ERROR_STATUS,
+              status: error.statusCode ?? error.status ?? DEFAULT_ERROR_STATUS,
               name: parsedSpec.raw,
               error: retrieveErrorMessage(error),
             }

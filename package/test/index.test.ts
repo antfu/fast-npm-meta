@@ -108,6 +108,17 @@ it.concurrent('latest', async () => {
     specifier: '=7.0.3',
     version: '7.0.3',
   })
+
+  expect(
+    await getLatestVersion('axios@150.150.150', { apiEndpoint, throw: false }),
+  ).toMatchObject({
+    name: 'axios@150.150.150',
+    error: 'Version 150.150.150 of package axios not found',
+  })
+
+  await expect(
+    getLatestVersion('axios@150.150.150', { apiEndpoint }),
+  ).rejects.toThrow('Version 150.150.150 of package axios not found')
 })
 
 it.concurrent('versions', async () => {
@@ -361,13 +372,13 @@ describe.concurrent('complex package names, complex versions', async () => {
   })
 
   it('multi-word package name with pre release version with hyphen in specifier', async () => {
-    const result = await fetchApi(`${apiEndpoint}/${pkgName}@1.0.0-pr.6`).then(
+    const result = await fetchApi(`${apiEndpoint}/${pkgName}@1.0.0-rc.4`).then(
       r => r.json(),
     )
     expect(result).toMatchObject({
       name: pkgName,
-      specifier: '1.0.0-pr.6',
-      version: '1.0.0-pr.6',
+      specifier: '1.0.0-rc.4',
+      version: '1.0.0-rc.4',
       lastSynced: expect.any(Number),
     })
   })
