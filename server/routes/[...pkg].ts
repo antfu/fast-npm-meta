@@ -42,6 +42,12 @@ export default eventHandler(async (event) => {
     else if (spec.type === 'version') {
       version = semver.clean(spec.fetchSpec, true)
       specifier = spec.fetchSpec
+      if (version && !data.versionsMeta[version]) {
+        throw createError({
+          status: 404,
+          message: `Version ${version} of package ${spec.name} not found`,
+        })
+      }
     }
     else {
       throw new Error(`Unsupported spec: ${JSON.stringify(spec)}`)
