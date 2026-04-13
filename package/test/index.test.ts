@@ -394,4 +394,16 @@ describe.concurrent('complex package names, complex versions', async () => {
       lastSynced: expect.any(Number),
     })
   })
+
+  it('package with multiple hyphens inside the identifier', async () => {
+    const result = await fetchApi(
+      `${apiEndpoint}/@graphql-codegen/cli@7.0.0-alpha-20260308111732-1c74ce2a5d8333d4f725c438ff9b6bbbf3e2386e`,
+    ).then(r => r.json())
+    expect(result).toMatchObject({
+      name: '@graphql-codegen/cli',
+      specifier: '7.0.0-alpha-20260308111732-1c74ce2a5d8333d4f725c438ff9b6bbbf3e2386e',
+      version: '7.0.0-alpha-20260308111732-1c74ce2a5d8333d4f725c438ff9b6bbbf3e2386e',
+      lastSynced: expect.any(Number),
+    })
+  })
 })
