@@ -1,11 +1,20 @@
 import { execSync } from 'node:child_process'
 
 const repoUrl = 'https://github.com/antfu/fast-npm-meta'
-const revision = execSync('git rev-parse HEAD').toString().trim()
+// eslint-disable-next-line node/prefer-global/process
+const revision = process.env.GIT_REVISION || (() => {
+  try {
+    return execSync('git rev-parse HEAD').toString().trim()
+  }
+  catch {
+    return 'unknown'
+  }
+})()
 
 // https://nitro.build/config
 export default defineNitroConfig({
-  preset: 'netlify_edge',
+  // eslint-disable-next-line node/prefer-global/process
+  preset: process.env.NITRO_PRESET as any || 'netlify_edge',
 
   storage: {
     manifest: {
