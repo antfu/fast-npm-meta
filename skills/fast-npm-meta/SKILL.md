@@ -1,7 +1,6 @@
 ---
 name: fast-npm-meta
-description: Get npm package metadata
-license: MIT
+description: Queries npm package metadata via the fast-npm-meta CLI — resolves package versions, dist-tags, publish dates, engine requirements, and version range specifiers. Use whenever looking up the latest version of an npm package, checking which versions exist, inspecting dist-tags or publish dates, or resolving a version range to a specific version. Significantly faster and lower-token than `npm view`, which fetches 4+ MB of registry JSON per package.
 ---
 
 # fast-npm-meta CLI
