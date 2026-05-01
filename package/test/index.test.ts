@@ -121,7 +121,7 @@ it.concurrent('latest', async () => {
   ).rejects.toThrow('Version 150.150.150 of package axios not found')
 })
 
-it.concurrent('versions', async () => {
+it.concurrent('versions', async ({ expect }) => {
   await expect(getVersions('vite', { apiEndpoint })).resolves.toMatchObject({
     name: 'vite',
     versions: expect.arrayContaining(['3.0.0']),
