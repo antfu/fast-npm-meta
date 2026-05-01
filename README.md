@@ -154,6 +154,25 @@ Returns an array of objects:
 ]
 ```
 
+## JSR Registry Support
+
+ Packages from [JSR](https://jsr.io) can be queried using the `jsr:` prefix:
+
+ ```
+ GET /jsr:@luca/flag
+ GET /versions/jsr:@luca/flag
+ ```
+
+ Batching with npm packages is supported:
+
+ ```
+ GET /vite+jsr:@luca/flag+vue
+ ```
+
+ The `jsr:@scope/name` prefix is automatically resolved to `@jsr/scope__name`
+ on the JSR npm-compatible registry (`https://npm.jsr.io/`).
+
+<!-- eslint-disable-next-line markdown/heading-increment -->
 #### 📦 Get Extra Metadata
 
 You can pass `?metadata=true` to get additional metadata about the package, such as `engines`, `deprecated`, etc.
