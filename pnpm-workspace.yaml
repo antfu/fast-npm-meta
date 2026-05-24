@@ -41,3 +41,7 @@ onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
   - unrs-resolver
+allowBuilds:
+  '@parcel/watcher': false
+  esbuild: false
+  simple-git-hooks: true
