@@ -15,7 +15,8 @@ export interface PackageVersionMeta {
   time?: string
   engines?: Engines
   deprecated?: string
-  provenance?: 'trustedPublisher' | boolean
+  provenance?: boolean
+  trustedPublisher?: boolean
   integrity?: string
 }
 
