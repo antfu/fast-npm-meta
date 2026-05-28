@@ -39,6 +39,8 @@ async function _fetchPackageManifest(name: string, registry: string, userAgent: 
       meta.trustedPublisher = true
     if (data.dist?.attestations?.provenance)
       meta.provenance = true
+    if (Object.keys(data)[0] === '_id')
+      meta.staged = true
     return meta
   }
 
