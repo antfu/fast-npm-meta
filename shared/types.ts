@@ -17,6 +17,7 @@ export interface PackageVersionMeta {
   deprecated?: string
   provenance?: boolean
   trustedPublisher?: boolean
+  staged?: boolean
   integrity?: string
 }
 
