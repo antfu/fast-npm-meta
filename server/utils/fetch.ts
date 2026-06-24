@@ -61,7 +61,7 @@ async function _fetchPackageManifest(name: string, registry: string, userAgent: 
 const CACHE_TIMEOUT = /* 15min */ 1000 * 60 * 15
 const CACHE_TIMEOUT_FORCE = /* 30sec */ 1000 * 30
 
-export async function fetchPackageManifest(name: string, force = false) {
+export async function fetchPackageManifest(name: string, force = false, registry?: string) {
   // Short-term cache, another request in progress
   if (promiseCache.has(name)) {
     return promiseCache.get(name)
@@ -87,7 +87,7 @@ export async function fetchPackageManifest(name: string, force = false) {
     }
   }
 
-  const registryUrl = config.app.registryUrl || REGISTRY
+  const registryUrl = registry || config.app.registryUrl || REGISTRY
   const registryUserAgent = config.app.registryUserAgent || USER_AGENT
   const promise = _fetchPackageManifest(name, registryUrl, registryUserAgent)
     .then(async (res) => {
