@@ -2,7 +2,7 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "packageManager": "pnpm@11.3.0",
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
     "build": "pnpm -r run build",
     "build:server": "pnpm -C server run build",
