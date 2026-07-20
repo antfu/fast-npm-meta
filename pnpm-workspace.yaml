@@ -1,6 +1,7 @@
 ignoreWorkspaceRootCheck: true
 minimumReleaseAgeExclude:
   - verkit@0.1.2
+  - tsdown@0.22.12
 shellEmulator: true
 
 trustPolicy: no-downgrade
@@ -20,7 +21,7 @@ catalogs:
     p-retry: ^8.0.0
     simple-git-hooks: ^2.13.1
     tinyexec: ^1.2.4
-    tsdown: ^0.22.3
+    tsdown: ^0.22.12
     tsx: ^4.22.4
     typescript: ^6.0.3
     vite: ^8.0.16

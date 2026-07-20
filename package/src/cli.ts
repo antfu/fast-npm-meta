@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import process from 'node:process'
 import { cac } from 'cac'
 import { version } from '../package.json'
