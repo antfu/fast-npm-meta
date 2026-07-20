@@ -70,12 +70,12 @@ catalogs:
     ofetch:
       specifier: ^1.5.1
       version: 1.5.1
-    semver:
-      specifier: ^7.8.5
-      version: 7.8.5
     ufo:
       specifier: ^1.6.4
       version: 1.6.4
+    verkit:
+      specifier: ^0.1.2
+      version: 0.1.2
   types:
     '@types/node':
       specifier: ^26.0.0
@@ -83,9 +83,6 @@ catalogs:
     '@types/npm-package-arg':
       specifier: ^6.1.4
       version: 6.1.4
-    '@types/semver':
-      specifier: ^7.7.1
-      version: 7.7.1
 
 importers:
 
@@ -154,9 +151,6 @@ importers:
       '@types/npm-package-arg':
         specifier: catalog:types
         version: 6.1.4
-      '@types/semver':
-        specifier: catalog:types
-        version: 7.7.1
       h3:
         specifier: catalog:server
         version: 1.15.11
@@ -172,12 +166,12 @@ importers:
       ofetch:
         specifier: catalog:server
         version: 1.5.1
-      semver:
-        specifier: catalog:server
-        version: 7.8.5
       ufo:
         specifier: catalog:server
         version: 1.6.4
+      verkit:
+        specifier: catalog:server
+        version: 0.1.2
 
 packages:
 
@@ -1235,9 +1229,6 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
-
-  '@types/semver@7.7.1':
-    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -3649,6 +3640,10 @@ packages:
     resolution: {integrity: sha512-SCv6OOV6Xj2/3cXy3dGmADluJTNcL3o7hZAglNPTe+WYuEuvxgJzxPrSDLZhF+CwyQOubqgecjMmTJGMVLWjYQ==}
     engines: {node: ^22.22.2 || ^24.15.0 || >=26.0.0}
 
+  verkit@0.1.2:
+    resolution: {integrity: sha512-WqkT8n3hqizuCu71W3bUzf5fjBmkbXcudsehe/NbxA8PgqoKnSOY5K0Ba2ckg1qaRaSpSz7as/n9K1R9JXjQKg==}
+    engines: {node: '>=18.12.0'}
+
   vite@8.0.16:
     resolution: {integrity: sha512-h9bXPmJichP5fLmVQo3PyaGSDE2n3aPuomeAlVRm0JLmt4rY6zmPKd59HYI4LNW8oTK7tlTsuC7l/m7awx9Jcw==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -4649,8 +4644,6 @@ snapshots:
 
   '@types/resolve@1.20.2': {}
 
-  '@types/semver@7.7.1': {}
-
   '@types/unist@3.0.3': {}
 
   '@typescript-eslint/eslint-plugin@8.59.4(@typescript-eslint/parser@8.59.4(eslint@10.5.0(jiti@2.6.1))(typescript@6.0.3))(eslint@10.5.0(jiti@2.6.1))(typescript@6.0.3)':
@@ -4720,7 +4713,7 @@ snapshots:
       eslint: 10.5.0(jiti@2.6.1)
       json-stable-stringify-without-jsonify: 1.0.1
       lodash.merge: 4.6.2
-      semver: 7.8.1
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -4767,8 +4760,8 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.56.1
       debug: 4.4.3
       minimatch: 10.2.5
-      semver: 7.8.1
-      tinyglobby: 0.2.16
+      semver: 7.8.5
+      tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -4782,8 +4775,8 @@ snapshots:
       '@typescript-eslint/visitor-keys': 8.59.4
       debug: 4.4.3
       minimatch: 10.2.5
-      semver: 7.8.1
-      tinyglobby: 0.2.16
+      semver: 7.8.5
+      tinyglobby: 0.2.17
       ts-api-utils: 2.5.0(typescript@6.0.3)
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -7364,6 +7357,8 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   validate-npm-package-name@8.0.0: {}
+
+  verkit@0.1.2: {}
 
   vite@8.0.16(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.6.1)(terser@5.31.1)(tsx@4.22.4)(yaml@2.9.0):
     dependencies:

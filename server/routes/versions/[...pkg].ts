@@ -1,5 +1,5 @@
 import type { PackageVersionsInfo, PackageVersionsInfoWithMetadata } from '../../../shared/types'
-import semver from 'semver'
+import { isLess, satisfies } from 'verkit'
 import { normalizeQueryDate } from '~/utils/date'
 import { fetchPackageManifest } from '../../utils/fetch'
 import { handlePackagesQuery } from '../../utils/handle'
@@ -13,13 +13,13 @@ export default eventHandler(async (event) => {
 
       if (spec.type === 'range' && spec.fetchSpec !== '*') {
         const satisfiedVersions = versions.filter((ver) => {
-          return semver.satisfies(ver, spec.fetchSpec)
+          return satisfies(ver, spec.fetchSpec)
         })
         if (query.loose) {
           versions = versions.filter((i) => {
             if (satisfiedVersions.includes(i))
               return true
-            return satisfiedVersions.some(s => semver.lt(s, i))
+            return satisfiedVersions.some(s => isLess(s, i))
           })
         }
         else {

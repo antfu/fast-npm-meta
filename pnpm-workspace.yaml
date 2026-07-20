@@ -1,4 +1,6 @@
 ignoreWorkspaceRootCheck: true
+minimumReleaseAgeExclude:
+  - verkit@0.1.2
 shellEmulator: true
 
 trustPolicy: no-downgrade
@@ -32,12 +34,11 @@ catalogs:
     nitropack: ^2.13.4
     npm-package-arg: ^14.0.0
     ofetch: ^1.5.1
-    semver: ^7.8.5
     ufo: ^1.6.4
+    verkit: ^0.1.2
   types:
     '@types/node': ^26.0.0
     '@types/npm-package-arg': ^6.1.4
-    '@types/semver': ^7.7.1
 
 allowBuilds:
   '@parcel/watcher': false

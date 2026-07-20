@@ -2,7 +2,7 @@ import type {
   ResolvedPackageVersion,
   ResolvedPackageVersionWithMetadata,
 } from '../../shared/types'
-import semver from 'semver'
+import { clean, isLessOrEqual, satisfies } from 'verkit'
 import { fetchPackageManifest } from '../utils/fetch'
 import { handlePackagesQuery } from '../utils/handle'
 
@@ -29,18 +29,18 @@ export default eventHandler(async (event) => {
     else if (spec.type === 'range') {
       specifier = spec.fetchSpec
       let maxVersion: string | null = data.distTags.latest
-      if (!semver.satisfies(maxVersion, spec.fetchSpec))
+      if (!satisfies(maxVersion, spec.fetchSpec))
         maxVersion = null
 
       Object.keys(data.versionsMeta).forEach((ver) => {
-        if (semver.satisfies(ver, spec.fetchSpec)) {
-          if (!maxVersion || semver.lte(ver, maxVersion))
+        if (satisfies(ver, spec.fetchSpec)) {
+          if (!maxVersion || isLessOrEqual(ver, maxVersion))
             version = ver
         }
       })
     }
     else if (spec.type === 'version') {
-      version = semver.clean(spec.fetchSpec, true)
+      version = clean(spec.fetchSpec, { loose: true })
       specifier = spec.fetchSpec
       if (version && !data.versionsMeta[version]) {
         throw createError({
