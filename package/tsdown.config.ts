@@ -28,7 +28,6 @@ export default defineConfig([
     platform: 'node',
     dts: false,
     inlineOnly: [
-      'cac',
       'p-retry',
       'is-network-error',
     ],

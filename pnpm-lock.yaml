@@ -15,9 +15,6 @@ catalogs:
     bumpp:
       specifier: ^11.1.0
       version: 11.1.0
-    cac:
-      specifier: ^7.0.0
-      version: 7.0.0
     eslint:
       specifier: ^10.5.0
       version: 10.5.0
@@ -54,6 +51,10 @@ catalogs:
     zx:
       specifier: ^8.8.5
       version: 8.8.5
+  prod:
+    cac:
+      specifier: ^7.0.0
+      version: 7.0.0
   server:
     h3:
       specifier: ^1.15.11
@@ -135,10 +136,11 @@ importers:
         version: 8.8.5
 
   package:
-    devDependencies:
+    dependencies:
       cac:
-        specifier: catalog:dev
+        specifier: catalog:prod
         version: 7.0.0
+    devDependencies:
       p-retry:
         specifier: catalog:dev
         version: 8.0.0

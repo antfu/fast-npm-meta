@@ -15,7 +15,6 @@ catalogs:
     '@antfu/eslint-config': ^9.0.0
     '@antfu/ni': ^30.1.0
     bumpp: ^11.1.0
-    cac: ^7.0.0
     eslint: ^10.5.0
     lint-staged: ^17.0.8
     p-retry: ^8.0.0
@@ -28,6 +27,8 @@ catalogs:
     vitest: ^4.1.9
     wait-port: ^1.1.0
     zx: ^8.8.5
+  prod:
+    cac: ^7.0.0
   server:
     h3: ^1.15.11
     lru-cache: ^11.5.1
