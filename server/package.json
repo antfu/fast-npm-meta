@@ -10,13 +10,12 @@
   },
   "devDependencies": {
     "@types/npm-package-arg": "catalog:types",
-    "@types/semver": "catalog:types",
     "h3": "catalog:server",
     "lru-cache": "catalog:server",
     "nitropack": "catalog:server",
     "npm-package-arg": "catalog:server",
     "ofetch": "catalog:server",
-    "semver": "catalog:server",
-    "ufo": "catalog:server"
+    "ufo": "catalog:server",
+    "verkit": "catalog:server"
   }
 }

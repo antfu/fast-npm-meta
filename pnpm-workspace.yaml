@@ -1,4 +1,7 @@
 ignoreWorkspaceRootCheck: true
+minimumReleaseAgeExclude:
+  - verkit@0.1.2
+  - tsdown@0.22.12
 shellEmulator: true
 
 trustPolicy: no-downgrade
@@ -13,31 +16,31 @@ catalogs:
     '@antfu/eslint-config': ^9.0.0
     '@antfu/ni': ^30.1.0
     bumpp: ^11.1.0
-    cac: ^7.0.0
     eslint: ^10.5.0
     lint-staged: ^17.0.8
     p-retry: ^8.0.0
     simple-git-hooks: ^2.13.1
     tinyexec: ^1.2.4
-    tsdown: ^0.22.3
+    tsdown: ^0.22.12
     tsx: ^4.22.4
     typescript: ^6.0.3
     vite: ^8.0.16
     vitest: ^4.1.9
     wait-port: ^1.1.0
     zx: ^8.8.5
+  prod:
+    cac: ^7.0.0
   server:
     h3: ^1.15.11
     lru-cache: ^11.5.1
     nitropack: ^2.13.4
     npm-package-arg: ^14.0.0
     ofetch: ^1.5.1
-    semver: ^7.8.5
     ufo: ^1.6.4
+    verkit: ^0.1.2
   types:
     '@types/node': ^26.0.0
     '@types/npm-package-arg': ^6.1.4
-    '@types/semver': ^7.7.1
 
 allowBuilds:
   '@parcel/watcher': false

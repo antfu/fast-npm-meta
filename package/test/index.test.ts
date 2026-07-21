@@ -128,6 +128,14 @@ it.concurrent('versions', async ({ expect }) => {
     lastSynced: expect.any(Number),
   })
 
+  const strictVersions = await getVersions('vite@5', { apiEndpoint })
+  const looseVersions = await getVersions('vite@5', {
+    apiEndpoint,
+    loose: true,
+  })
+  expect(strictVersions.versions).not.toContain('6.0.0')
+  expect(looseVersions.versions).toContain('6.0.0')
+
   await expect(
     getVersions('@antfu/some-private-package', { apiEndpoint }),
   ).rejects.toThrowErrorMatchingInlineSnapshot(

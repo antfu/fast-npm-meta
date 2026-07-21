@@ -1,20 +1,20 @@
 import fs from 'node:fs/promises'
 import { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'tsdown'
 
-const dirname = fileURLToPath(new URL('.', import.meta.url))
+const { dirname } = import.meta
 
 export default defineConfig([
   {
     entry: ['src/index.ts'],
-    clean: true,
     dts: true,
     exports: true,
-    inlineOnly: [
-      'p-retry',
-      'is-network-error',
-    ],
+    deps: {
+      onlyBundle: [
+        'p-retry',
+        'is-network-error',
+      ],
+    },
     hooks: {
       'build:done': async () => {
         // Copy skills from root folder to package/skills
@@ -27,11 +27,12 @@ export default defineConfig([
     entry: { cli: 'src/cli.ts' },
     platform: 'node',
     dts: false,
-    inlineOnly: [
-      'cac',
-      'p-retry',
-      'is-network-error',
-    ],
-    banner: { js: '#!/usr/bin/env node' },
+    deps: {
+      onlyBundle: [
+        'p-retry',
+        'is-network-error',
+      ],
+    },
+    exports: true,
   },
 ])
