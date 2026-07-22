@@ -154,6 +154,25 @@ Returns an array of objects:
 ]
 ```
 
+## JSR Registry Support
+
+ Packages from [JSR](https://jsr.io) can be queried using the `jsr:` prefix:
+
+ ```
+ GET /jsr:@luca/flag
+ GET /versions/jsr:@luca/flag
+ ```
+
+ Batching with npm packages is supported:
+
+ ```
+ GET /vite+jsr:@luca/flag+vue
+ ```
+
+ The `jsr:@scope/name` prefix is automatically resolved to `@jsr/scope__name`
+ on the JSR npm-compatible registry (`https://npm.jsr.io/`).
+
+<!-- eslint-disable-next-line markdown/heading-increment -->
 #### 📦 Get Extra Metadata
 
 You can pass `?metadata=true` to get additional metadata about the package, such as `engines`, `deprecated`, etc.
@@ -429,6 +448,25 @@ The tool does not require any preliminary configuration to work, but you can ove
 | `REGISTRY_USER_AGENT` | User agent for NPM registry requests | `get-npm-meta`                         |
 
 For more information, follow [the official Nitro guides](https://nitro.build/deploy/runtimes/node#environment-variables).
+
+## Docker
+
+```bash
+# Build
+docker build -t fast-npm-meta --build-arg GIT_REVISION=$(git rev-parse HEAD) .
+
+# Run
+docker run -p 3000:3000 fast-npm-meta
+```
+
+Environment variables:
+
+| Variable | Description | Default |
+|---|---|---|
+| `PORT` | Server port | `3000` |
+| `NITRO_APP_CACHE_TIMEOUT` | Cache timeout (ms) | `''` |
+| `NITRO_APP_CACHE_TIMEOUT_FORCE` | Force cache timeout (ms) | `''` |
+| `NITRO_APP_REGISTRY_URL` | npm registry URL | `https://registry.npmjs.org/` |
 
 ## Sponsors
 

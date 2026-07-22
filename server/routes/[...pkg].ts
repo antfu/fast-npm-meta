@@ -9,8 +9,9 @@ import { handlePackagesQuery } from '../utils/handle'
 export default eventHandler(async (event) => {
   return handlePackagesQuery<
     ResolvedPackageVersion | ResolvedPackageVersionWithMetadata
-  >(event, async (spec, query) => {
-    const data = await fetchPackageManifest(spec.name, !!query.force)
+  >(event, async (spec, query, options) => {
+    const data = await fetchPackageManifest(spec.name, !!query.force, options?.registry)
+    const name = options?.displayName || spec.name
 
     let version: string | null = null
     let specifier = 'latest'
@@ -56,7 +57,7 @@ export default eventHandler(async (event) => {
     const meta = data.versionsMeta[version]
 
     const result: ResolvedPackageVersion = {
-      name: spec.name,
+      name,
       specifier,
       version,
       publishedAt: meta?.time || undefined,

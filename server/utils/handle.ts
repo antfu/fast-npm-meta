@@ -4,12 +4,19 @@ import type { QueryObject } from 'ufo'
 import type { MaybeError, PackageError } from '../../shared/types'
 import { createError, getQuery } from 'h3'
 import parsePackage from 'npm-package-arg'
+import { resolveJsrSpec } from './jsr'
 
 const DEFAULT_ERROR_STATUS = 400
 
+export interface ResolvedSpec {
+  spec: ParsedSpec
+  registry?: string
+  displayName?: string
+}
+
 export async function handlePackagesQuery<T extends object>(
   event: H3Event<EventHandlerRequest>,
-  handler: (spec: ParsedSpec, query: QueryObject) => Promise<T>,
+  handler: (spec: ParsedSpec, query: QueryObject, options?: { registry?: string, displayName?: string }) => Promise<T>,
 ): Promise<MaybeError<T> | MaybeError<T>[] | H3Error> {
   const query = getQuery(event)
 
@@ -24,14 +31,20 @@ export async function handlePackagesQuery<T extends object>(
   const specs = raw.split('+').map(s => decodeURIComponent(s)).filter(Boolean)
 
   // Record the spec index to keep the result order consistent.
-  const validSpecs: [idx: number, ParsedSpec][] = []
+  const validSpecs: [idx: number, ResolvedSpec][] = []
   const results = Array.from<MaybeError<T>>({ length: specs.length })
 
   for (const [idx, spec] of specs.entries()) {
     let parsedSpec: ParsedSpec
+    let registry: string | undefined
+    let displayName: string | undefined
+
+    // Detect jsr: prefix
+    const jsrSpec = resolveJsrSpec(spec)
+    const specToParse = jsrSpec ? jsrSpec.registryName : spec
     try {
       // Throws if the package name is invalid
-      parsedSpec = parsePackage(normalizeSemverRange(spec))
+      parsedSpec = parsePackage(normalizeSemverRange(specToParse))
     }
     catch (error) {
       const result: PackageError = {
@@ -64,14 +77,18 @@ export async function handlePackagesQuery<T extends object>(
       results[idx] = result
       continue
     }
+    if (jsrSpec) {
+      registry = jsrSpec.registry
+      displayName = jsrSpec.displayName
+    }
 
-    validSpecs.push([idx, parsedSpec])
+    validSpecs.push([idx, { spec: parsedSpec, registry, displayName }])
   }
 
   if (validSpecs.length) {
     await Promise.allSettled(
-      validSpecs.map(async ([idx, parsedSpec]) =>
-        handler(parsedSpec, query)
+      validSpecs.map(async ([idx, { spec: parsedSpec, registry, displayName }]) =>
+        handler(parsedSpec, query, { registry, displayName })
           .then((result) => {
             results[idx] = result
           })
