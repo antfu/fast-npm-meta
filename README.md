@@ -430,6 +430,25 @@ The tool does not require any preliminary configuration to work, but you can ove
 
 For more information, follow [the official Nitro guides](https://nitro.build/deploy/runtimes/node#environment-variables).
 
+## Docker
+
+```bash
+# Build
+docker build -t fast-npm-meta --build-arg GIT_REVISION=$(git rev-parse HEAD) .
+
+# Run
+docker run -p 3000:3000 fast-npm-meta
+```
+
+Environment variables:
+
+| Variable | Description | Default |
+|---|---|---|
+| `PORT` | Server port | `3000` |
+| `NITRO_APP_CACHE_TIMEOUT` | Cache timeout (ms) | `''` |
+| `NITRO_APP_CACHE_TIMEOUT_FORCE` | Force cache timeout (ms) | `''` |
+| `NITRO_APP_REGISTRY_URL` | npm registry URL | `https://registry.npmjs.org/` |
+
 ## Sponsors
 
 <p align="center">
